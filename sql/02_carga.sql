@@ -1,119 +1,169 @@
 -- =============================================================================
 -- 02_carga.sql
--- Projeto Final — LABORATÓRIO DE BANCO DE DADOS (GPE17M40053)
--- Domínio: Locadora de Equipamentos para Construção Civil
--- SGBD alvo: MySQL 8+
-
+-- Projeto Final — LABORATÓRIO DE BANCO DE DADOS
+-- Carga de dados atendendo à volumetria mínima (40 principais / 100 movimento)
 -- =============================================================================
 USE locadora_equipamentos;
+
 -- -----------------------------------------------------------------------------
 -- 1. FORMA DE PAGAMENTO (Domínio estático)
 -- -----------------------------------------------------------------------------
 INSERT INTO forma_pagamento (nome_forma) VALUES 
-('PIX'), 
-('Cartão de crédito'), 
-('Cartão de débito'), 
-('Dinheiro'), 
-('Boleto');
+('PIX'), ('Cartão de crédito'), ('Cartão de débito'), ('Dinheiro'), ('Boleto');
 
 -- -----------------------------------------------------------------------------
 -- 2. CATEGORIA (Catálogo base)
 -- -----------------------------------------------------------------------------
 INSERT INTO categoria (nome_categoria) VALUES 
-('Concretagem e Argamassa'),
-('Terraplanagem'),
-('Furação e Demolição'),
-('Acesso e Elevação');
+('Concretagem e Argamassa'), ('Terraplanagem'), ('Furação e Demolição'), ('Acesso e Elevação');
 
 -- -----------------------------------------------------------------------------
--- 3. PESSOA (Superclasse - Clientes e Funcionários)
+-- 3. MODELO_EQUIPAMENTO (Catálogo)
 -- -----------------------------------------------------------------------------
--- Dados fictícios de pessoas físicas e jurídicas.
--- Pessoas 1 e 2 serão funcionários; Pessoas 3, 4 e 5 serão clientes.
-INSERT INTO pessoa (nome, doc_cpf_cnpj, email, telefone) VALUES 
-('Carlos Almeida Silva', '111.111.111-11', 'carlos.gerencia@locadora.fake', '(11) 99999-1111'),
-('Mariana Souza Santos', '222.222.222-22', 'mariana.atend@locadora.fake', NULL), -- Caso de contorno: telefone NULL
-('Construtora Alfa Ltda', '33.333.333/0001-33', 'compras@alfa.fake', '(11) 3333-3333'),
-('Roberto de Oliveira', '444.444.444-44', 'roberto.eng@email.fake', '(11) 98888-4444'),
-('Reformas Express ME', '55.555.555/0001-55', 'contato@express.fake', NULL); -- Caso de contorno: telefone NULL
-
--- -----------------------------------------------------------------------------
--- 4. FUNCIONARIO (Subclasse com hierarquia / RN05)
--- -----------------------------------------------------------------------------
--- O funcionário 1 é o Gerente (não tem supervisor).
--- A funcionária 2 é Atendente (supervisionada pelo funcionário 1).
-INSERT INTO funcionario (id_pessoa, salario, cargo, id_supervisor) VALUES 
-(1, 6500.00, 'Gerente de Operações', NULL), -- Caso de contorno: Topo da hierarquia
-(2, 2800.00, 'Atendente Comercial', 1);
-
--- -----------------------------------------------------------------------------
--- 5. CLIENTE (Subclasse)
--- -----------------------------------------------------------------------------
-INSERT INTO cliente (id_pessoa, limite_credito) VALUES 
-(3, 50000.00), -- Cliente corporativo alto limite
-(4, 5000.00),  -- Pessoa física limite padrão
-(5, 0.00);     -- Caso de contorno: Cliente bloqueado ou sem limite pré-aprovado
-
--- -----------------------------------------------------------------------------
--- 6. MODELO_EQUIPAMENTO (Catálogo)
--- -----------------------------------------------------------------------------
--- Inserindo modelos associados às categorias (1=Concretagem, 2=Terraplanagem, 3=Furação)
 INSERT INTO modelo_equipamento (id_categoria, nome, marca, valor_diaria_padrao) VALUES 
 (1, 'Betoneira 400L', 'Menegotti', 150.00),
 (3, 'Martelete Rompedor 15kg', 'Bosch', 95.00),
-(2, 'Retroescavadeira 4x4', NULL, 900.00); -- Caso de contorno: Equipamento sem marca documentada
+(2, 'Retroescavadeira 4x4', 'CAT', 900.00),
+(4, 'Andaime Tubular 1x1.5m', 'Locaforte', 15.00),
+(3, 'Furadeira de Impacto', 'Makita', 45.00);
 
 -- -----------------------------------------------------------------------------
--- 7. EQUIPAMENTO (Instâncias Físicas)
+-- 4. PESSOA (40+ registros para garantir volumetria nas tabelas principais)
+-- -----------------------------------------------------------------------------
+-- 2 Funcionários e 38 Clientes = 40 Pessoas
+INSERT INTO pessoa (nome, doc_cpf_cnpj, email, telefone) VALUES 
+('Carlos Almeida Silva', '111.111.111-11', 'carlos.gerencia@locadora.fake', '(11) 99999-1111'),
+('Mariana Souza Santos', '222.222.222-22', 'mariana.atend@locadora.fake', NULL),
+('Cliente 03', '000.000.000-03', 'c03@fake.com', NULL), ('Cliente 04', '000.000.000-04', 'c04@fake.com', NULL),
+('Cliente 05', '000.000.000-05', 'c05@fake.com', NULL), ('Cliente 06', '000.000.000-06', 'c06@fake.com', NULL),
+('Cliente 07', '000.000.000-07', 'c07@fake.com', NULL), ('Cliente 08', '000.000.000-08', 'c08@fake.com', NULL),
+('Cliente 09', '000.000.000-09', 'c09@fake.com', NULL), ('Cliente 10', '000.000.000-10', 'c10@fake.com', NULL),
+('Cliente 11', '000.000.000-11', 'c11@fake.com', NULL), ('Cliente 12', '000.000.000-12', 'c12@fake.com', NULL),
+('Cliente 13', '000.000.000-13', 'c13@fake.com', NULL), ('Cliente 14', '000.000.000-14', 'c14@fake.com', NULL),
+('Cliente 15', '000.000.000-15', 'c15@fake.com', NULL), ('Cliente 16', '000.000.000-16', 'c16@fake.com', NULL),
+('Cliente 17', '000.000.000-17', 'c17@fake.com', NULL), ('Cliente 18', '000.000.000-18', 'c18@fake.com', NULL),
+('Cliente 19', '000.000.000-19', 'c19@fake.com', NULL), ('Cliente 20', '000.000.000-20', 'c20@fake.com', NULL),
+('Cliente 21', '000.000.000-21', 'c21@fake.com', NULL), ('Cliente 22', '000.000.000-22', 'c22@fake.com', NULL),
+('Cliente 23', '000.000.000-23', 'c23@fake.com', NULL), ('Cliente 24', '000.000.000-24', 'c24@fake.com', NULL),
+('Cliente 25', '000.000.000-25', 'c25@fake.com', NULL), ('Cliente 26', '000.000.000-26', 'c26@fake.com', NULL),
+('Cliente 27', '000.000.000-27', 'c27@fake.com', NULL), ('Cliente 28', '000.000.000-28', 'c28@fake.com', NULL),
+('Cliente 29', '000.000.000-29', 'c29@fake.com', NULL), ('Cliente 30', '000.000.000-30', 'c30@fake.com', NULL),
+('Cliente 31', '000.000.000-31', 'c31@fake.com', NULL), ('Cliente 32', '000.000.000-32', 'c32@fake.com', NULL),
+('Cliente 33', '000.000.000-33', 'c33@fake.com', NULL), ('Cliente 34', '000.000.000-34', 'c34@fake.com', NULL),
+('Cliente 35', '000.000.000-35', 'c35@fake.com', NULL), ('Cliente 36', '000.000.000-36', 'c36@fake.com', NULL),
+('Cliente 37', '000.000.000-37', 'c37@fake.com', NULL), ('Cliente 38', '000.000.000-38', 'c38@fake.com', NULL),
+('Cliente 39', '000.000.000-39', 'c39@fake.com', NULL), ('Cliente 40', '000.000.000-40', 'c40@fake.com', NULL);
+
+-- -----------------------------------------------------------------------------
+-- 5. FUNCIONARIO (2 registros)
+-- -----------------------------------------------------------------------------
+INSERT INTO funcionario (id_pessoa, salario, cargo, id_supervisor) VALUES 
+(1, 6500.00, 'Gerente de Operações', NULL), 
+(2, 2800.00, 'Atendente Comercial', 1);
+
+-- -----------------------------------------------------------------------------
+-- 6. CLIENTE (38 registros associados as pessoas criadas acima)
+-- -----------------------------------------------------------------------------
+INSERT INTO cliente (id_pessoa, limite_credito) VALUES 
+(3, 5000.0), (4, 5000.0), (5, 5000.0), (6, 5000.0), (7, 5000.0), (8, 5000.0), (9, 5000.0), (10, 5000.0),
+(11, 5000.0), (12, 5000.0), (13, 5000.0), (14, 5000.0), (15, 5000.0), (16, 5000.0), (17, 5000.0), (18, 5000.0),
+(19, 5000.0), (20, 5000.0), (21, 5000.0), (22, 5000.0), (23, 5000.0), (24, 5000.0), (25, 5000.0), (26, 5000.0),
+(27, 5000.0), (28, 5000.0), (29, 5000.0), (30, 5000.0), (31, 5000.0), (32, 5000.0), (33, 5000.0), (34, 5000.0),
+(35, 5000.0), (36, 5000.0), (37, 5000.0), (38, 5000.0), (39, 5000.0), (40, 5000.0);
+
+-- -----------------------------------------------------------------------------
+-- 7. EQUIPAMENTO (40+ instâncias físicas)
 -- -----------------------------------------------------------------------------
 INSERT INTO equipamento (id_modeloE, numero_serie, status) VALUES 
-(1, 'BET-2024-001', 'Disponível'),
-(1, 'BET-2024-002', 'Inativo'),      -- Caso de contorno: Máquina em manutenção/inativa
-(2, 'MAR-2023-105', 'Disponível'),
-(3, 'RET-2022-088', 'Disponível');
+(1, 'EQ-001', 'Disponível'), (2, 'EQ-002', 'Disponível'), (3, 'EQ-003', 'Disponível'), (4, 'EQ-004', 'Disponível'), (5, 'EQ-005', 'Disponível'),
+(1, 'EQ-006', 'Disponível'), (2, 'EQ-007', 'Disponível'), (3, 'EQ-008', 'Disponível'), (4, 'EQ-009', 'Disponível'), (5, 'EQ-010', 'Disponível'),
+(1, 'EQ-011', 'Disponível'), (2, 'EQ-012', 'Disponível'), (3, 'EQ-013', 'Disponível'), (4, 'EQ-014', 'Disponível'), (5, 'EQ-015', 'Disponível'),
+(1, 'EQ-016', 'Disponível'), (2, 'EQ-017', 'Disponível'), (3, 'EQ-018', 'Disponível'), (4, 'EQ-019', 'Disponível'), (5, 'EQ-020', 'Disponível'),
+(1, 'EQ-021', 'Disponível'), (2, 'EQ-022', 'Disponível'), (3, 'EQ-023', 'Disponível'), (4, 'EQ-024', 'Disponível'), (5, 'EQ-025', 'Disponível'),
+(1, 'EQ-026', 'Disponível'), (2, 'EQ-027', 'Disponível'), (3, 'EQ-028', 'Disponível'), (4, 'EQ-029', 'Disponível'), (5, 'EQ-030', 'Disponível'),
+(1, 'EQ-031', 'Disponível'), (2, 'EQ-032', 'Disponível'), (3, 'EQ-033', 'Disponível'), (4, 'EQ-034', 'Disponível'), (5, 'EQ-035', 'Disponível'),
+(1, 'EQ-036', 'Disponível'), (2, 'EQ-037', 'Disponível'), (3, 'EQ-038', 'Disponível'), (4, 'EQ-039', 'Disponível'), (5, 'EQ-040', 'Disponível'),
+(1, 'EQ-041', 'Disponível');
 
 -- -----------------------------------------------------------------------------
--- 8. EMPRESTIMO (Transacional)
+-- 8. EMPRESTIMO (40+ transações)
 -- -----------------------------------------------------------------------------
--- Empréstimo 1: Finalizado, histórico no passado. (Cliente 3, Func 2, PG: PIX = ID 1)
--- Empréstimo 2: Em Aberto. (Cliente 4, Func 2, PG: Cartão Créd = ID 2)
--- Empréstimo 3: Cancelado (Caso de contorno). (Cliente 5, Func 1, PG: Dinheiro = ID 4)
 INSERT INTO emprestimo (id_cliente, id_funcionario, id_formaPgmt, data_emissao, data_prevista_devolucao, valor_total, status_emprestimo) VALUES 
-(3, 2, 1, '2026-08-01', '2026-08-05', 1225.00, 'Finalizado'),
-(4, 2, 2, CURRENT_DATE, DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY), 665.00, 'Em Aberto'),
-(5, 1, 4, '2026-08-15', '2026-08-20', 0.00, 'Cancelado'); -- Cancelado antes da entrega
+(3, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (4, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(5, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (6, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(7, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (8, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(9, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (10, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(11, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (12, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(13, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (14, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(15, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (16, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(17, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (18, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(19, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (20, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(21, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (22, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(23, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (24, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(25, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (26, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(27, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (28, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(29, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (30, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(31, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (32, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(33, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (34, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(35, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (36, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(37, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (38, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(39, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (40, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
+(3, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (4, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto');
 
 -- -----------------------------------------------------------------------------
--- 9. ITEM_EMPRESTIMO (Associativa com histórico de preço - RN13 / Gatilho RN14)
+-- 9. ITEM_EMPRESTIMO (Tabela de maior movimento: 100+ registros)
+-- Para atingir a meta, cada um dos 40 empréstimos receberá múltiplos equipamentos.
 -- -----------------------------------------------------------------------------
--- Para o Empréstimo 1 (Finalizado)
 INSERT INTO item_emprestimo (id_emprestimo, id_equipamento, valor_diaria_aplicado) VALUES 
-(1, 1, 150.00), -- Valor padrão
-(1, 3, 95.00);  -- Valor padrão
-
--- Para o Empréstimo 2 (Em Aberto) -> *O GATILHO RN14 vai alterar o status do equipamento 4 para 'Alugado' automaticamente.
-INSERT INTO item_emprestimo (id_emprestimo, id_equipamento, valor_diaria_aplicado) VALUES 
-(2, 4, 850.00); -- Caso de contorno: Negociação de preço com desconto aplicado (-R$50 da diária)
+(1, 1, 150), (1, 2, 95), (1, 3, 900), 
+(2, 4, 15), (2, 5, 45), (2, 6, 150), 
+(3, 7, 95), (3, 8, 900), (3, 9, 15), 
+(4, 10, 45), (4, 11, 150), (4, 12, 95), 
+(5, 13, 900), (5, 14, 15), (5, 15, 45), 
+(6, 16, 150), (6, 17, 95), (6, 18, 900), 
+(7, 19, 15), (7, 20, 45), (7, 21, 150), 
+(8, 22, 95), (8, 23, 900), (8, 24, 15), 
+(9, 25, 45), (9, 26, 150), (9, 27, 95), 
+(10, 28, 900), (10, 29, 15), (10, 30, 45), 
+(11, 31, 150), (11, 32, 95), (11, 33, 900), 
+(12, 34, 15), (12, 35, 45), (12, 36, 150), 
+(13, 37, 95), (13, 38, 900), (13, 39, 15), 
+(14, 40, 45), (14, 41, 150), (14, 1, 95), 
+(15, 2, 900), (15, 3, 15), (15, 4, 45), 
+(16, 5, 150), (16, 6, 95), (16, 7, 900), 
+(17, 8, 15), (17, 9, 45), (17, 10, 150), 
+(18, 11, 95), (18, 12, 900), (18, 13, 15), 
+(19, 14, 45), (19, 15, 150), (19, 16, 95), 
+(20, 17, 900), (20, 18, 15), (20, 19, 45), 
+(21, 20, 150), (21, 21, 95), (21, 22, 900), 
+(22, 23, 15), (22, 24, 45), (22, 25, 150), 
+(23, 26, 95), (23, 27, 900), (23, 28, 15), 
+(24, 29, 45), (24, 30, 150), (24, 31, 95), 
+(25, 32, 900), (25, 33, 15), (25, 34, 45), 
+(26, 35, 150), (26, 36, 95), (26, 37, 900), 
+(27, 38, 15), (27, 39, 45), (27, 40, 150), 
+(28, 41, 95), (28, 1, 900), (28, 2, 15), 
+(29, 3, 45), (29, 4, 150), (29, 5, 95), 
+(30, 6, 900), (30, 7, 15), (30, 8, 45), 
+(31, 9, 150), (31, 10, 95), (31, 11, 900), 
+(32, 12, 15), (32, 13, 45), (32, 14, 150), 
+(33, 15, 95), (33, 16, 900), (33, 17, 15), 
+(34, 18, 45), (34, 19, 150), (34, 20, 95), 
+(35, 21, 900), (35, 22, 15), (35, 23, 45), 
+(36, 24, 150), (36, 25, 95), (36, 26, 900), 
+(37, 27, 15), (37, 28, 45), (37, 29, 150), 
+(38, 30, 95), (38, 31, 900), (38, 32, 15), 
+(39, 33, 45), (39, 34, 150), (39, 35, 95), 
+(40, 36, 900), (40, 37, 15), (40, 38, 45);
 
 -- -----------------------------------------------------------------------------
--- 10. PAGAMENTO (Financeiro principal)
+-- 10. PAGAMENTO e PARCELAS (Opcional, mas mantém a integridade)
 -- -----------------------------------------------------------------------------
--- Empréstimo 1 gerou Pagamento 1
+-- Vamos registrar 1 pagamento à vista genérico para os 5 primeiros empréstimos
 INSERT INTO pagamento (id_emprestimo, valor_total) VALUES 
-(1, 1225.00);
+(1, 1000.00), (2, 1000.00), (3, 1000.00), (4, 1000.00), (5, 1000.00);
 
--- Empréstimo 2 gerou Pagamento 2
-INSERT INTO pagamento (id_emprestimo, valor_total) VALUES 
-(2, 665.00);
-
--- -----------------------------------------------------------------------------
--- 11. PARCELA_PAGAMENTO (Entidade Fraca - Gatilho RN19)
--- -----------------------------------------------------------------------------
--- Pagamento 1 (PIX à vista, vencimento no dia da emissão do empréstimo)
 INSERT INTO parcela_pagamento (id_pagamento, num_parcela, data_vencimento, valor_parcela) VALUES 
-(1, 1, '2026-08-01', 1225.00);
-
--- Pagamento 2 (Cartão de Crédito dividido em 2x, vencimento 30 e 60 dias após)
-INSERT INTO parcela_pagamento (id_pagamento, num_parcela, data_vencimento, valor_parcela) VALUES 
-(2, 1, DATE_ADD(CURRENT_DATE, INTERVAL 30 DAY), 332.50),
-(2, 2, DATE_ADD(CURRENT_DATE, INTERVAL 60 DAY), 332.50);
+(1, 1, '2026-08-01', 1000.00), (2, 1, '2026-08-01', 1000.00), 
+(3, 1, '2026-08-01', 1000.00), (4, 1, '2026-08-01', 1000.00), 
+(5, 1, '2026-08-01', 1000.00);
