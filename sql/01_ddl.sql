@@ -14,7 +14,7 @@ CREATE DATABASE IF NOT EXISTS locadora_equipamentos
 USE locadora_equipamentos;
 
 -- -----------------------------------------------------------------------------
--- 1. PESSOA (superclasse da generalização Pessoa -> Cliente / Funcionario)[cite: 1]
+-- 1. PESSOA (superclasse da generalização Pessoa -> Cliente / Funcionario)
 -- -----------------------------------------------------------------------------
 CREATE TABLE pessoa (
     id_pessoa       BIGINT AUTO_INCREMENT,
@@ -28,7 +28,7 @@ CREATE TABLE pessoa (
 ) COMMENT = 'Superclasse cadastral (RN01, RN02). Estratégia de generalização: tabela por subclasse.';
 
 -- -----------------------------------------------------------------------------
--- 2. CLIENTE (subclasse de Pessoa)[cite: 1]
+-- 2. CLIENTE (subclasse de Pessoa)
 -- -----------------------------------------------------------------------------
 CREATE TABLE cliente (
     id_pessoa       BIGINT        NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE cliente (
 ) COMMENT = 'Especialização de Pessoa. id_pessoa é PK e, ao mesmo tempo, FK para pessoa (RN03).';
 
 -- -----------------------------------------------------------------------------
--- 3. FUNCIONARIO (subclasse de Pessoa, com autorrelacionamento de supervisão)[cite: 1]
+-- 3. FUNCIONARIO (subclasse de Pessoa, com autorrelacionamento de supervisão)
 -- -----------------------------------------------------------------------------
 CREATE TABLE funcionario (
     id_pessoa      BIGINT        NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE funcionario (
 ) COMMENT = 'Especialização de Pessoa. id_supervisor implementa a hierarquia "Supervisiona" (RN05).';
 
 -- -----------------------------------------------------------------------------
--- 4. CATEGORIA[cite: 1]
+-- 4. CATEGORIA
 -- -----------------------------------------------------------------------------
 CREATE TABLE categoria (
     id_categoria    BIGINT AUTO_INCREMENT,
@@ -59,7 +59,7 @@ CREATE TABLE categoria (
 );
 
 -- -----------------------------------------------------------------------------
--- 5. MODELO_EQUIPAMENTO (catálogo)[cite: 1]
+-- 5. MODELO_EQUIPAMENTO (catálogo)
 -- -----------------------------------------------------------------------------
 CREATE TABLE modelo_equipamento (
     id_modeloE           BIGINT AUTO_INCREMENT,
@@ -72,7 +72,7 @@ CREATE TABLE modelo_equipamento (
 );
 
 -- -----------------------------------------------------------------------------
--- 6. EQUIPAMENTO (unidade física)[cite: 1]
+-- 6. EQUIPAMENTO (unidade física)
 -- -----------------------------------------------------------------------------
 CREATE TABLE equipamento (
     id_equipamento           BIGINT AUTO_INCREMENT,
@@ -85,7 +85,7 @@ CREATE TABLE equipamento (
 );
 
 -- -----------------------------------------------------------------------------
--- 7. FORMA_PAGAMENTO[cite: 1]
+-- 7. FORMA_PAGAMENTO
 -- -----------------------------------------------------------------------------
 CREATE TABLE forma_pagamento (
     id_formaPgmt   BIGINT AUTO_INCREMENT,
@@ -98,7 +98,7 @@ CREATE TABLE forma_pagamento (
 );
 
 -- -----------------------------------------------------------------------------
--- 8. EMPRESTIMO (entidade transacional central)[cite: 1]
+-- 8. EMPRESTIMO (entidade transacional central)
 -- -----------------------------------------------------------------------------
 CREATE TABLE emprestimo (
     id_emprestimo             BIGINT AUTO_INCREMENT,
@@ -115,7 +115,7 @@ CREATE TABLE emprestimo (
 );
 
 -- -----------------------------------------------------------------------------
--- 9. ITEM_EMPRESTIMO (associativa N:N Emprestimo x Equipamento, com atributo próprio)[cite: 1]
+-- 9. ITEM_EMPRESTIMO (associativa N:N Emprestimo x Equipamento, com atributo próprio)
 -- -----------------------------------------------------------------------------
 CREATE TABLE item_emprestimo (
     id_emprestimo          BIGINT        NOT NULL,
@@ -126,7 +126,7 @@ CREATE TABLE item_emprestimo (
 );
 
 -- -----------------------------------------------------------------------------
--- 10. PAGAMENTO[cite: 1]
+-- 10. PAGAMENTO
 -- -----------------------------------------------------------------------------
 CREATE TABLE pagamento (
     id_pagamento    BIGINT AUTO_INCREMENT,
@@ -137,7 +137,7 @@ CREATE TABLE pagamento (
 );
 
 -- -----------------------------------------------------------------------------
--- 11. PARCELA_PAGAMENTO (entidade fraca, identificada por dependência)[cite: 1]
+-- 11. PARCELA_PAGAMENTO (entidade fraca, identificada por dependência)
 -- -----------------------------------------------------------------------------
 CREATE TABLE parcela_pagamento (
     id_pagamento     BIGINT        NOT NULL,
@@ -150,7 +150,7 @@ CREATE TABLE parcela_pagamento (
 ) COMMENT = 'Entidade fraca (RN18): identificador parcial num_parcela + FK do pagamento pai.';
 
 -- =============================================================================
--- CHAVES ESTRANGEIRAS[cite: 1]
+-- CHAVES ESTRANGEIRAS
 -- =============================================================================
 
 ALTER TABLE cliente
@@ -212,66 +212,3 @@ ALTER TABLE parcela_pagamento
     ADD CONSTRAINT fk_parcela_pagamento
     FOREIGN KEY (id_pagamento) REFERENCES pagamento (id_pagamento)
     ON DELETE CASCADE ON UPDATE CASCADE;
-
--- =============================================================================
--- ÍNDICES DE APOIO ÀS CHAVES ESTRANGEIRAS[cite: 1]
--- =============================================================================
-CREATE INDEX idx_funcionario_supervisor    ON funcionario (id_supervisor);
-CREATE INDEX idx_modelo_equip_categoria    ON modelo_equipamento (id_categoria);
-CREATE INDEX idx_equipamento_modelo        ON equipamento (id_modeloE);
-CREATE INDEX idx_emprestimo_cliente        ON emprestimo (id_cliente);
-CREATE INDEX idx_emprestimo_funcionario    ON emprestimo (id_funcionario);
-CREATE INDEX idx_emprestimo_forma_pgmt     ON emprestimo (id_formaPgmt);
-CREATE INDEX idx_item_emprestimo_equip     ON item_emprestimo (id_equipamento);
-CREATE INDEX idx_pagamento_emprestimo      ON pagamento (id_emprestimo);
-
--- =============================================================================
--- GATILHOS DE REGRA DE NEGÓCIO[cite: 1]
--- =============================================================================
-
-DELIMITER //
-
-CREATE TRIGGER trg_item_emprestimo_status
-AFTER INSERT ON item_emprestimo
-FOR EACH ROW
-BEGIN
-    UPDATE equipamento
-       SET status = 'Alugado'
-     WHERE id_equipamento = NEW.id_equipamento;
-END //
-
-CREATE TRIGGER trg_parcela_valida_vencimento_ins
-BEFORE INSERT ON parcela_pagamento
-FOR EACH ROW
-BEGIN
-    DECLARE v_data_emissao DATE;
-
-    SELECT e.data_emissao INTO v_data_emissao
-      FROM pagamento p
-      JOIN emprestimo e ON e.id_emprestimo = p.id_emprestimo
-     WHERE p.id_pagamento = NEW.id_pagamento;
-
-    IF NEW.data_vencimento < v_data_emissao THEN
-        SIGNAL SQLSTATE '45000'
-          SET MESSAGE_TEXT = 'RN19 violada: data_vencimento anterior a data_emissao do emprestimo';
-    END IF;
-END //
-
-CREATE TRIGGER trg_parcela_valida_vencimento_upd
-BEFORE UPDATE ON parcela_pagamento
-FOR EACH ROW
-BEGIN
-    DECLARE v_data_emissao DATE;
-
-    SELECT e.data_emissao INTO v_data_emissao
-      FROM pagamento p
-      JOIN emprestimo e ON e.id_emprestimo = p.id_emprestimo
-     WHERE p.id_pagamento = NEW.id_pagamento;
-
-    IF NEW.data_vencimento < v_data_emissao THEN
-        SIGNAL SQLSTATE '45000'
-          SET MESSAGE_TEXT = 'RN19 violada: data_vencimento anterior a data_emissao do emprestimo';
-    END IF;
-END //
-
-DELIMITER ;
