@@ -1,24 +1,25 @@
 -- =============================================================================
 -- 02_carga.sql
 -- Projeto Final — LABORATÓRIO DE BANCO DE DADOS
--- Carga de dados atendendo à volumetria mínima (40 principais / 100 movimento)
+-- Carga de dados diversificada e aderente às Regras de Negócio (RN09, RN15, RN16)
+-- Volumetria mínima garantida: 40 principais / 100 movimento
 -- =============================================================================
 USE locadora_equipamentos;
 
 -- -----------------------------------------------------------------------------
--- 1. FORMA DE PAGAMENTO (Domínio estático)
+-- 1. FORMA DE PAGAMENTO 
 -- -----------------------------------------------------------------------------
 INSERT INTO forma_pagamento (nome_forma) VALUES 
 ('PIX'), ('Cartão de crédito'), ('Cartão de débito'), ('Dinheiro'), ('Boleto');
 
 -- -----------------------------------------------------------------------------
--- 2. CATEGORIA (Catálogo base)
+-- 2. CATEGORIA
 -- -----------------------------------------------------------------------------
 INSERT INTO categoria (nome_categoria) VALUES 
 ('Concretagem e Argamassa'), ('Terraplanagem'), ('Furação e Demolição'), ('Acesso e Elevação');
 
 -- -----------------------------------------------------------------------------
--- 3. MODELO_EQUIPAMENTO (Catálogo)
+-- 3. MODELO_EQUIPAMENTO
 -- -----------------------------------------------------------------------------
 INSERT INTO modelo_equipamento (id_categoria, nome, marca, valor_diaria_padrao) VALUES 
 (1, 'Betoneira 400L', 'Menegotti', 150.00),
@@ -28,91 +29,128 @@ INSERT INTO modelo_equipamento (id_categoria, nome, marca, valor_diaria_padrao) 
 (3, 'Furadeira de Impacto', 'Makita', 45.00);
 
 -- -----------------------------------------------------------------------------
--- 4. PESSOA (40+ registros para garantir volumetria nas tabelas principais)
+-- 4. PESSOA 
 -- -----------------------------------------------------------------------------
--- 2 Funcionários e 38 Clientes = 40 Pessoas
 INSERT INTO pessoa (nome, doc_cpf_cnpj, email, telefone) VALUES 
 ('Carlos Almeida Silva', '111.111.111-11', 'carlos.gerencia@locadora.fake', '(11) 99999-1111'),
 ('Mariana Souza Santos', '222.222.222-22', 'mariana.atend@locadora.fake', NULL),
-('Cliente 03', '000.000.000-03', 'c03@fake.com', NULL), ('Cliente 04', '000.000.000-04', 'c04@fake.com', NULL),
-('Cliente 05', '000.000.000-05', 'c05@fake.com', NULL), ('Cliente 06', '000.000.000-06', 'c06@fake.com', NULL),
-('Cliente 07', '000.000.000-07', 'c07@fake.com', NULL), ('Cliente 08', '000.000.000-08', 'c08@fake.com', NULL),
-('Cliente 09', '000.000.000-09', 'c09@fake.com', NULL), ('Cliente 10', '000.000.000-10', 'c10@fake.com', NULL),
-('Cliente 11', '000.000.000-11', 'c11@fake.com', NULL), ('Cliente 12', '000.000.000-12', 'c12@fake.com', NULL),
-('Cliente 13', '000.000.000-13', 'c13@fake.com', NULL), ('Cliente 14', '000.000.000-14', 'c14@fake.com', NULL),
-('Cliente 15', '000.000.000-15', 'c15@fake.com', NULL), ('Cliente 16', '000.000.000-16', 'c16@fake.com', NULL),
-('Cliente 17', '000.000.000-17', 'c17@fake.com', NULL), ('Cliente 18', '000.000.000-18', 'c18@fake.com', NULL),
-('Cliente 19', '000.000.000-19', 'c19@fake.com', NULL), ('Cliente 20', '000.000.000-20', 'c20@fake.com', NULL),
-('Cliente 21', '000.000.000-21', 'c21@fake.com', NULL), ('Cliente 22', '000.000.000-22', 'c22@fake.com', NULL),
-('Cliente 23', '000.000.000-23', 'c23@fake.com', NULL), ('Cliente 24', '000.000.000-24', 'c24@fake.com', NULL),
-('Cliente 25', '000.000.000-25', 'c25@fake.com', NULL), ('Cliente 26', '000.000.000-26', 'c26@fake.com', NULL),
-('Cliente 27', '000.000.000-27', 'c27@fake.com', NULL), ('Cliente 28', '000.000.000-28', 'c28@fake.com', NULL),
-('Cliente 29', '000.000.000-29', 'c29@fake.com', NULL), ('Cliente 30', '000.000.000-30', 'c30@fake.com', NULL),
-('Cliente 31', '000.000.000-31', 'c31@fake.com', NULL), ('Cliente 32', '000.000.000-32', 'c32@fake.com', NULL),
-('Cliente 33', '000.000.000-33', 'c33@fake.com', NULL), ('Cliente 34', '000.000.000-34', 'c34@fake.com', NULL),
-('Cliente 35', '000.000.000-35', 'c35@fake.com', NULL), ('Cliente 36', '000.000.000-36', 'c36@fake.com', NULL),
-('Cliente 37', '000.000.000-37', 'c37@fake.com', NULL), ('Cliente 38', '000.000.000-38', 'c38@fake.com', NULL),
-('Cliente 39', '000.000.000-39', 'c39@fake.com', NULL), ('Cliente 40', '000.000.000-40', 'c40@fake.com', NULL);
+('Construtora Alfa Ltda', '33.333.333/0001-33', 'compras@alfa.fake', '(11) 3333-3333'),
+('Roberto de Oliveira Eng.', '444.444.444-44', 'roberto.eng@email.fake', '(11) 98888-4444'),
+('Reformas Express ME', '55.555.555/0001-55', 'contato@express.fake', NULL),
+('Ana Beatriz Costa', '000.000.000-06', 'ana.costa@email.com', '(11) 97777-6666'),
+('Pedro Henrique Souza', '000.000.000-07', 'pedro.h@email.com', '(11) 98888-7777'),
+('Lucas Pereira Alves', '000.000.000-08', 'lucas.p@email.com', NULL),
+('Carla Mendes', '000.000.000-09', 'carla.mendes@email.com', NULL),
+('Marcos Rocha', '000.000.000-10', 'marcos.r@email.com', '(21) 96666-5555'),
+('TechConstruções S/A', '12.345.678/0001-11', 'contato@techconst.com', '(11) 4002-8922'),
+('Juliana Lima', '000.000.000-12', 'juliana.lima@email.com', NULL),
+('Felipe Martins', '000.000.000-13', 'felipe.martins@email.com', NULL),
+('Empreiteira Silva', '98.765.432/0001-14', 'contato@empreiteirasilva.com', '(31) 3333-4444'),
+('Camila Rodrigues', '000.000.000-15', 'camila.r@email.com', NULL),
+('Thiago Fernandes', '000.000.000-16', 'thiago.f@email.com', NULL),
+('Bruno Gomes', '000.000.000-17', 'bruno.g@email.com', NULL),
+('Renata Castro', '000.000.000-18', 'renata.c@email.com', NULL),
+('Igor Ribeiro', '000.000.000-19', 'igor.r@email.com', NULL),
+('Amanda Carvalho', '000.000.000-20', 'amanda.c@email.com', NULL),
+('Vitor Barbosa', '000.000.000-21', 'vitor.b@email.com', NULL),
+('Obras Rápidas Ltda', '11.222.333/0001-22', 'vendas@obrasrapidas.com', NULL),
+('Larissa Nogueira', '000.000.000-23', 'larissa.n@email.com', NULL),
+('Diego Monteiro', '000.000.000-24', 'diego.m@email.com', NULL),
+('Patrícia Nunes', '000.000.000-25', 'patricia.n@email.com', NULL),
+('Rodrigo Azevedo', '000.000.000-26', 'rodrigo.a@email.com', NULL),
+('Vanessa Pires', '000.000.000-27', 'vanessa.p@email.com', NULL),
+('Edificações Master', '44.555.666/0001-28', 'financeiro@masteredific.com', NULL),
+('Guilherme Melo', '000.000.000-29', 'guilherme.m@email.com', NULL),
+('Letícia Cardoso', '000.000.000-30', 'leticia.c@email.com', NULL),
+('Rafael Teixeira', '000.000.000-31', 'rafael.t@email.com', NULL),
+('Marina Cavalcante', '000.000.000-32', 'marina.c@email.com', NULL),
+('Sérgio Moraes', '000.000.000-33', 'sergio.m@email.com', NULL),
+('Tatiana Farias', '000.000.000-34', 'tatiana.f@email.com', NULL),
+('Alexandre Duarte', '000.000.000-35', 'alexandre.d@email.com', NULL),
+('Construtora Base', '99.888.777/0001-36', 'sac@base.com', NULL),
+('Daniela Viana', '000.000.000-37', 'daniela.v@email.com', NULL),
+('Eduardo Machado', '000.000.000-38', 'eduardo.m@email.com', NULL),
+('Fernanda Borges', '000.000.000-39', 'fernanda.b@email.com', NULL),
+('Ricardo Lemos', '000.000.000-40', 'ricardo.l@email.com', NULL);
 
 -- -----------------------------------------------------------------------------
--- 5. FUNCIONARIO (2 registros)
+-- 5. FUNCIONARIO 
 -- -----------------------------------------------------------------------------
 INSERT INTO funcionario (id_pessoa, salario, cargo, id_supervisor) VALUES 
 (1, 6500.00, 'Gerente de Operações', NULL), 
 (2, 2800.00, 'Atendente Comercial', 1);
 
 -- -----------------------------------------------------------------------------
--- 6. CLIENTE (38 registros associados as pessoas criadas acima)
+-- 6. CLIENTE 
 -- -----------------------------------------------------------------------------
 INSERT INTO cliente (id_pessoa, limite_credito) VALUES 
-(3, 5000.0), (4, 5000.0), (5, 5000.0), (6, 5000.0), (7, 5000.0), (8, 5000.0), (9, 5000.0), (10, 5000.0),
-(11, 5000.0), (12, 5000.0), (13, 5000.0), (14, 5000.0), (15, 5000.0), (16, 5000.0), (17, 5000.0), (18, 5000.0),
-(19, 5000.0), (20, 5000.0), (21, 5000.0), (22, 5000.0), (23, 5000.0), (24, 5000.0), (25, 5000.0), (26, 5000.0),
-(27, 5000.0), (28, 5000.0), (29, 5000.0), (30, 5000.0), (31, 5000.0), (32, 5000.0), (33, 5000.0), (34, 5000.0),
-(35, 5000.0), (36, 5000.0), (37, 5000.0), (38, 5000.0), (39, 5000.0), (40, 5000.0);
+(3, 50000.0), (4, 15000.0), (5, 5000.0), (6, 2000.0), (7, 3000.0), (8, 4500.0), (9, 2500.0), (10, 10000.0),
+(11, 80000.0), (12, 1200.0), (13, 2000.0), (14, 30000.0), (15, 4000.0), (16, 1500.0), (17, 3000.0), (18, 5000.0),
+(19, 2000.0), (20, 1800.0), (21, 6000.0), (22, 25000.0), (23, 1000.0), (24, 7000.0), (25, 3000.0), (26, 4000.0),
+(27, 2500.0), (28, 40000.0), (29, 3500.0), (30, 2000.0), (31, 1500.0), (32, 3000.0), (33, 5000.0), (34, 4500.0),
+(35, 6000.0), (36, 100000.0), (37, 2000.0), (38, 1000.0), (39, 3500.0), (40, 4000.0);
 
 -- -----------------------------------------------------------------------------
--- 7. EQUIPAMENTO (40+ instâncias físicas)
+-- 7. EQUIPAMENTO 
 -- -----------------------------------------------------------------------------
 INSERT INTO equipamento (id_modeloE, numero_serie, status) VALUES 
-(1, 'EQ-001', 'Disponível'), (2, 'EQ-002', 'Disponível'), (3, 'EQ-003', 'Disponível'), (4, 'EQ-004', 'Disponível'), (5, 'EQ-005', 'Disponível'),
-(1, 'EQ-006', 'Disponível'), (2, 'EQ-007', 'Disponível'), (3, 'EQ-008', 'Disponível'), (4, 'EQ-009', 'Disponível'), (5, 'EQ-010', 'Disponível'),
-(1, 'EQ-011', 'Disponível'), (2, 'EQ-012', 'Disponível'), (3, 'EQ-013', 'Disponível'), (4, 'EQ-014', 'Disponível'), (5, 'EQ-015', 'Disponível'),
-(1, 'EQ-016', 'Disponível'), (2, 'EQ-017', 'Disponível'), (3, 'EQ-018', 'Disponível'), (4, 'EQ-019', 'Disponível'), (5, 'EQ-020', 'Disponível'),
-(1, 'EQ-021', 'Disponível'), (2, 'EQ-022', 'Disponível'), (3, 'EQ-023', 'Disponível'), (4, 'EQ-024', 'Disponível'), (5, 'EQ-025', 'Disponível'),
-(1, 'EQ-026', 'Disponível'), (2, 'EQ-027', 'Disponível'), (3, 'EQ-028', 'Disponível'), (4, 'EQ-029', 'Disponível'), (5, 'EQ-030', 'Disponível'),
-(1, 'EQ-031', 'Disponível'), (2, 'EQ-032', 'Disponível'), (3, 'EQ-033', 'Disponível'), (4, 'EQ-034', 'Disponível'), (5, 'EQ-035', 'Disponível'),
-(1, 'EQ-036', 'Disponível'), (2, 'EQ-037', 'Disponível'), (3, 'EQ-038', 'Disponível'), (4, 'EQ-039', 'Disponível'), (5, 'EQ-040', 'Disponível'),
-(1, 'EQ-041', 'Disponível');
+(1, 'BET-001', 'Disponível'), (2, 'MAR-001', 'Alugado'), (3, 'RET-001', 'Inativo'), (4, 'AND-001', 'Disponível'), (5, 'FUR-001', 'Alugado'),
+(1, 'BET-002', 'Alugado'), (2, 'MAR-002', 'Disponível'), (3, 'RET-002', 'Disponível'), (4, 'AND-002', 'Inativo'), (5, 'FUR-002', 'Disponível'),
+(1, 'BET-003', 'Disponível'), (2, 'MAR-003', 'Disponível'), (3, 'RET-003', 'Alugado'), (4, 'AND-003', 'Disponível'), (5, 'FUR-003', 'Alugado'),
+(1, 'BET-004', 'Inativo'), (2, 'MAR-004', 'Alugado'), (3, 'RET-004', 'Disponível'), (4, 'AND-004', 'Disponível'), (5, 'FUR-004', 'Disponível'),
+(1, 'BET-005', 'Disponível'), (2, 'MAR-005', 'Disponível'), (3, 'RET-005', 'Disponível'), (4, 'AND-005', 'Alugado'), (5, 'FUR-005', 'Inativo'),
+(1, 'BET-006', 'Alugado'), (2, 'MAR-006', 'Disponível'), (3, 'RET-006', 'Disponível'), (4, 'AND-006', 'Disponível'), (5, 'FUR-006', 'Disponível'),
+(1, 'BET-007', 'Disponível'), (2, 'MAR-007', 'Inativo'), (3, 'RET-007', 'Alugado'), (4, 'AND-007', 'Disponível'), (5, 'FUR-007', 'Disponível'),
+(1, 'BET-008', 'Disponível'), (2, 'MAR-008', 'Disponível'), (3, 'RET-008', 'Disponível'), (4, 'AND-008', 'Inativo'), (5, 'FUR-008', 'Alugado'),
+(1, 'BET-009', 'Disponível');
 
 -- -----------------------------------------------------------------------------
--- 8. EMPRESTIMO (40+ transações)
+-- 8. EMPRESTIMO 
 -- -----------------------------------------------------------------------------
 INSERT INTO emprestimo (id_cliente, id_funcionario, id_formaPgmt, data_emissao, data_prevista_devolucao, valor_total, status_emprestimo) VALUES 
-(3, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (4, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(5, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (6, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(7, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (8, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(9, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (10, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(11, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (12, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(13, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (14, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(15, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (16, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(17, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (18, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(19, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (20, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(21, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (22, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(23, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (24, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(25, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (26, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(27, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (28, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(29, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (30, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(31, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (32, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(33, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (34, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(35, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (36, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(37, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (38, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(39, 2, 1, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (40, 2, 2, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), 
-(3, 2, 3, '2026-08-01', '2026-08-05', 0, 'Em Aberto'), (4, 2, 4, '2026-08-01', '2026-08-05', 0, 'Em Aberto');
+(3, 2, 1, '2026-08-01', '2026-08-05', 0, 'Finalizado'), 
+(4, 2, 2, '2026-08-10', '2026-08-15', 0, 'Em Aberto'),  
+(5, 2, 3, '2026-08-12', '2026-08-14', 0, 'Finalizado'), 
+(6, 1, 4, '2026-08-20', '2026-08-25', 0, 'Cancelado'),  
+(7, 2, 5, '2026-08-01', '2026-08-10', 0, 'Finalizado'), 
+(8, 2, 1, '2026-09-01', '2026-09-05', 0, 'Em Aberto'),
+(9, 1, 2, '2026-09-02', '2026-09-07', 0, 'Em Aberto'),
+(10, 2, 3, '2026-09-03', '2026-09-08', 0, 'Em Aberto'),
+(11, 2, 4, '2026-07-01', '2026-07-05', 0, 'Finalizado'),
+(12, 1, 5, '2026-09-10', '2026-09-15', 0, 'Cancelado'),
+(13, 2, 1, '2026-08-15', '2026-08-20', 0, 'Finalizado'),
+(14, 2, 2, '2026-09-05', '2026-09-12', 0, 'Em Aberto'),
+(15, 1, 3, '2026-09-06', '2026-09-10', 0, 'Em Aberto'),
+(16, 2, 4, '2026-06-10', '2026-06-15', 0, 'Finalizado'),
+(17, 2, 5, '2026-09-20', '2026-09-25', 0, 'Cancelado'),
+(18, 1, 1, '2026-09-07', '2026-09-14', 0, 'Em Aberto'),
+(19, 2, 2, '2026-09-08', '2026-09-12', 0, 'Em Aberto'),
+(20, 2, 3, '2026-08-25', '2026-08-30', 0, 'Finalizado'),
+(21, 1, 4, '2026-09-01', '2026-09-05', 0, 'Cancelado'),
+(22, 2, 5, '2026-09-09', '2026-09-16', 0, 'Em Aberto'),
+(23, 2, 1, '2026-09-10', '2026-09-15', 0, 'Em Aberto'),
+(24, 1, 2, '2026-07-15', '2026-07-20', 0, 'Finalizado'),
+(25, 2, 3, '2026-09-11', '2026-09-18', 0, 'Em Aberto'),
+(26, 2, 4, '2026-08-05', '2026-08-10', 0, 'Finalizado'),
+(27, 1, 5, '2026-09-15', '2026-09-20', 0, 'Cancelado'),
+(28, 2, 1, '2026-09-12', '2026-09-17', 0, 'Em Aberto'),
+(29, 2, 2, '2026-09-13', '2026-09-19', 0, 'Em Aberto'),
+(30, 1, 3, '2026-05-10', '2026-05-15', 0, 'Finalizado'),
+(31, 2, 4, '2026-09-14', '2026-09-20', 0, 'Em Aberto'),
+(32, 2, 5, '2026-09-15', '2026-09-21', 0, 'Em Aberto'),
+(33, 1, 1, '2026-04-20', '2026-04-25', 0, 'Finalizado'),
+(34, 2, 2, '2026-09-16', '2026-09-22', 0, 'Em Aberto'),
+(35, 2, 3, '2026-09-17', '2026-09-23', 0, 'Em Aberto'),
+(36, 1, 4, '2026-08-10', '2026-08-15', 0, 'Finalizado'),
+(37, 2, 5, '2026-09-18', '2026-09-24', 0, 'Em Aberto'),
+(38, 2, 1, '2026-09-19', '2026-09-25', 0, 'Em Aberto'),
+(39, 1, 2, '2026-03-01', '2026-03-05', 0, 'Finalizado'),
+(40, 2, 3, '2026-09-20', '2026-09-26', 0, 'Em Aberto'),
+(3, 2, 4, '2026-09-21', '2026-09-27', 0, 'Em Aberto'),
+(4, 1, 5, '2026-09-25', '2026-09-30', 0, 'Cancelado');
 
 -- -----------------------------------------------------------------------------
--- 9. ITEM_EMPRESTIMO (Tabela de maior movimento: 100+ registros)
--- Para atingir a meta, cada um dos 40 empréstimos receberá múltiplos equipamentos.
+-- 9. ITEM_EMPRESTIMO
 -- -----------------------------------------------------------------------------
 INSERT INTO item_emprestimo (id_emprestimo, id_equipamento, valor_diaria_aplicado) VALUES 
 (1, 1, 150), (1, 2, 95), (1, 3, 900), 
@@ -157,13 +195,14 @@ INSERT INTO item_emprestimo (id_emprestimo, id_equipamento, valor_diaria_aplicad
 (40, 36, 900), (40, 37, 15), (40, 38, 45);
 
 -- -----------------------------------------------------------------------------
--- 10. PAGAMENTO e PARCELAS (Opcional, mas mantém a integridade)
+-- 10. PAGAMENTO e PARCELAS
 -- -----------------------------------------------------------------------------
--- Vamos registrar 1 pagamento à vista genérico para os 5 primeiros empréstimos
 INSERT INTO pagamento (id_emprestimo, valor_total) VALUES 
-(1, 1000.00), (2, 1000.00), (3, 1000.00), (4, 1000.00), (5, 1000.00);
+(1, 1000.00), (2, 500.00), (3, 1200.00), (5, 800.00), (11, 2000.00);
 
 INSERT INTO parcela_pagamento (id_pagamento, num_parcela, data_vencimento, valor_parcela) VALUES 
-(1, 1, '2026-08-01', 1000.00), (2, 1, '2026-08-01', 1000.00), 
-(3, 1, '2026-08-01', 1000.00), (4, 1, '2026-08-01', 1000.00), 
-(5, 1, '2026-08-01', 1000.00);
+(1, 1, '2026-08-01', 1000.00), 
+(2, 1, '2026-09-10', 250.00), (2, 2, '2026-10-10', 250.00), 
+(3, 1, '2026-08-12', 1200.00), 
+(4, 1, '2026-08-05', 800.00), 
+(5, 1, '2026-07-05', 2000.00);
