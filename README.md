@@ -75,15 +75,15 @@ A forma mais rápida de testar o sistema é através do executável compilado.
 1. Acesse a aba de **Releases** no menu lateral deste repositório no GitHub.
 2. Faça o download do arquivo `.jar` ou `.zip` mais recente.
 3.1 UTILIZANDO `.zip` (MELHOR PARA WINDOWS)
-   3.1.1 Descompacte o `.zip` e faça os seguintes passos:
-   3.1.2 Coloque seu **Driver JDBC** dentro da pasta `drivers`
-   3.1.3 Garanta que seu `config.properties` esteja na mesma pasta que o `.exe`
-   3.1.4 Rode o executável
+*  3.1.1 Descompacte o `.zip` e faça os seguintes passos:
+*  3.1.2 Coloque seu **Driver JDBC** dentro da pasta `drivers`
+*   3.1.3 Garanta que seu `config.properties` esteja na mesma pasta que o `.exe`
+*   3.1.4 Rode o executável
 3.2 UTILIZANDO `.jar` (S.O  EM GERAL)
-   3.2.1 Coloque o `.jar` em uma pasta de sua preferência
-   3.2.2 Crie a pasta  `drivers`
-   3.2.3 Na mesma pasta do arquivo `.jar` crie um arquivo `.bat` com as seguintes instruções:
-   **(Windows)**
+*   3.2.1 Coloque o `.jar` em uma pasta de sua preferência
+*  3.2.2 Crie a pasta  `drivers`
+*  3.2.3 Na mesma pasta do arquivo `.jar` crie um arquivo `.bat` com as seguintes instruções:
+*  **(Windows)**
    ```bat
    @echo off
    java -cp "locadora-construcao-civil.jar;drivers/*" br.locadora.view.TelaPrincipal
@@ -93,8 +93,8 @@ A forma mais rápida de testar o sistema é através do executável compilado.
    ```bash
      java -cp "locadora-construcao-civil.jar:drivers/*" br.locadora.view.TelaPrincipal
    ```
-   3.2.4 Garanta que seu `config.properties` esteja na mesma pasta que o `.jar`
-   3.2.5 Rode o arquivo `.bat`
+ *  3.2.4 Garanta que seu `config.properties` esteja na mesma pasta que o `.jar`
+ *  3.2.5 Rode o arquivo `.bat`
    
 
 ### 3. Buildando a partir do Código-Fonte (IDE)
