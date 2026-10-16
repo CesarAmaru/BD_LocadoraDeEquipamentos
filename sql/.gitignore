@@ -1,0 +1,5 @@
+build/
+dist/
+nbproject/private/
+locadora-construcao-civil/config.properties
+*.class
