@@ -5,6 +5,7 @@
 package br.locadora.model.dao;
 
 import br.locadora.model.dao.interfaces.InterfaceDAO;
+import br.locadora.model.dto.EstatisticaClienteDTO;
 import br.locadora.model.entities.Cliente;
 import br.locadora.model.exceptions.DataBaseException;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 public class ClienteDAO implements InterfaceDAO<Cliente> {
 
@@ -116,6 +118,9 @@ public class ClienteDAO implements InterfaceDAO<Cliente> {
             ps.setInt(1, v.getIdPessoa());
             ps.executeUpdate();
         } catch (SQLException e) {
+            if("23000".equals(e.getSQLState())){
+                throw new DataBaseException("Não é possível excluir esse registro pois ele está sendo utilizado em outro lugar", e);
+            }
             throw new DataBaseException("Erro ao deletar o cliente: " + e.getMessage(), e);
         }
     }
@@ -152,4 +157,65 @@ public class ClienteDAO implements InterfaceDAO<Cliente> {
             throw new DataBaseException("Erro ao atualizar o cliente: " + e.getMessage(), e);
         }
     }
+    public List<EstatisticaClienteDTO> buscarEstatisticasPorFiltro(String nomeCliente, LocalDate dataInicio, LocalDate dataFim) {
+    StringBuilder sql = new StringBuilder(
+        "SELECT p.id_pessoa, p.nome, p.doc_cpf_cnpj, " +
+        "COUNT(DISTINCT emp.id_emprestimo) AS qtd_emprestimos, " +
+        "SUM(ie.valor_diaria_aplicado * GREATEST(DATEDIFF(emp.data_prevista_devolucao, emp.data_emissao), 1)) AS total_gasto, " +
+        "MAX(emp.data_emissao) AS ultima_locacao " +
+        "FROM pessoa p " +
+        "INNER JOIN cliente c ON p.id_pessoa = c.id_pessoa " +
+        "INNER JOIN emprestimo emp ON c.id_pessoa = emp.id_cliente " +
+        "INNER JOIN item_emprestimo ie ON emp.id_emprestimo = ie.id_emprestimo " +
+        "WHERE LOWER(p.nome) LIKE ?"
+    );
+
+    if (dataInicio != null) {
+        sql.append(" AND emp.data_emissao >= ?");
+    }
+    if (dataFim != null) {
+        sql.append(" AND emp.data_emissao <= ?");
+    }
+
+    sql.append(" GROUP BY p.id_pessoa, p.nome, p.doc_cpf_cnpj ORDER BY total_gasto DESC");
+
+    List<EstatisticaClienteDTO> lista = new ArrayList<>();
+
+    try (Connection cn = DAO.abrirBanco(); 
+         PreparedStatement ps = cn.prepareStatement(sql.toString())) {
+
+        int index = 1;
+        ps.setString(index++, "%" + (nomeCliente != null ? nomeCliente.toLowerCase().trim() : "") + "%");
+
+        if (dataInicio != null) {
+            ps.setDate(index++, java.sql.Date.valueOf(dataInicio));
+        }
+        if (dataFim != null) {
+            ps.setDate(index++, java.sql.Date.valueOf(dataFim));
+        }
+
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                EstatisticaClienteDTO dto = new EstatisticaClienteDTO();
+                dto.setIdCliente(rs.getInt("id_pessoa"));
+                dto.setNomeCliente(rs.getString("nome"));
+                dto.setDocCpfCnpj(rs.getString("doc_cpf_cnpj"));
+                dto.setQtdEmprestimos(rs.getInt("qtd_emprestimos"));
+                dto.setTotalGasto(rs.getDouble("total_gasto"));
+
+                java.sql.Date dt = rs.getDate("ultima_locacao");
+                if (dt != null) {
+                    dto.setUltimaLocacao(dt.toLocalDate());
+                }
+
+                lista.add(dto);
+            }
+        }
+        return lista;
+
+    } catch (SQLException e) {
+        throw new DataBaseException("Erro ao buscar estatísticas dos clientes: " + e.getMessage(), e);
+    }
+}
+    
 }

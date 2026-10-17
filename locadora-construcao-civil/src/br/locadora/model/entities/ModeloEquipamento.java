@@ -66,9 +66,8 @@ public class ModeloEquipamento {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("id_categoria: " + categoria.getIdCategoria() + "|");
-        sb.append("Nome: " + nome + "|");
-        sb.append("Marca: " + marca + "|");
+        sb.append("Nome: " + nome + "| ");
+        sb.append("Marca: " + marca + "| ");
         sb.append("Valor diária padrão: " + valorDiariaPadrao + "|");
          
          return sb.toString();

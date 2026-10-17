@@ -176,6 +176,9 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
                 cn.setAutoCommit(true);
             }
         } catch (SQLException e) {
+            if("23000".equals(e.getSQLState())){
+                throw new DataBaseException("Não é possível excluir esse registro pois ele está sendo utilizado em outro lugar", e);
+            }
             throw new DataBaseException("Erro ao deletar funcionário: " + e.getMessage(), e);
         }
     }

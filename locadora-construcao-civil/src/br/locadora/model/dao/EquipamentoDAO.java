@@ -99,6 +99,9 @@ public class EquipamentoDAO implements InterfaceDAO<Equipamento> {
             ps.setInt(1, v.getIdEquipamento());
             ps.executeUpdate();
         } catch (SQLException e) {
+            if("23000".equals(e.getSQLState())){
+                throw new DataBaseException("Não é possível excluir esse registro pois ele está sendo utilizado em outro lugar", e);
+            }
             throw new DataBaseException("Erro ao deletar o equipamento: " + e.getMessage(), e);
         }
     }

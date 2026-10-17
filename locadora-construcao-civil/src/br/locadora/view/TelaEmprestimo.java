@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -364,12 +365,12 @@ public class TelaEmprestimo extends javax.swing.JFrame {
             LocalDate dataEmprestimo = LocalDate.parse(jTfDataEmprestimo.getText(), formatter);
             LocalDate dataDevolucao = LocalDate.parse(jTfDataDevolucao.getText(), formatter);
 
-            Period periodo = Period.between(dataEmprestimo, dataDevolucao);
-            int dias = periodo.getDays();
-            if (dias <= 0 || periodo.isNegative()) {
+            long periodo = ChronoUnit.DAYS.between(dataEmprestimo, dataDevolucao);
+            if (periodo <= 0) {
                 JOptionPane.showMessageDialog(this, "A data de devolução deve ser posterior à data inicial.", "Aviso", JOptionPane.WARNING_MESSAGE);
                 return;
             }
+            int dias = (int) periodo;
             Double valorDiaria = (eqSelecionado.getModelo() != null) ? eqSelecionado.getModelo().getValorDiariaPadrao() : null;
             if (valorDiaria == null || valorDiaria <= 0) {
                 JOptionPane.showMessageDialog(this, "O equipamento selecionado não possui um valor de diária válido cadastrado.", "Aviso", JOptionPane.WARNING_MESSAGE);

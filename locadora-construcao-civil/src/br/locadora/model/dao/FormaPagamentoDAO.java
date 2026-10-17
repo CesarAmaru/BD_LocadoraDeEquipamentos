@@ -79,6 +79,9 @@ public class FormaPagamentoDAO implements InterfaceDAO<FormaPagamento> {
             ps.setInt(1, v.getIdFormaPgmt());
             ps.executeUpdate();
         } catch (SQLException e) {
+            if("23000".equals(e.getSQLState())){
+                throw new DataBaseException("Não é possível excluir esse registro pois ele está sendo utilizado em outro lugar", e);
+            }
             throw new DataBaseException("Erro ao deletar a forma de pagamento: " + e.getMessage(), e);
         }
     }

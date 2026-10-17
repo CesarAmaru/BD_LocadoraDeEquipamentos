@@ -117,4 +117,16 @@ public class EmprestimoController {
         dao.registrarDevolucao(idEmprestimo);
     }
     
+    public List<Emprestimo> buscarPorFiltro(String nomeCliente, String status) {
+        if (nomeCliente == null) {
+            nomeCliente = "";
+        }
+        
+        if (status == null || status.equalsIgnoreCase("TODOS")) {
+            status = "";
+        }
+
+        return dao.buscarPorFiltro(nomeCliente, status);
+    }
+    
 }

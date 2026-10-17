@@ -39,6 +39,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -80,11 +82,19 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuItem6.addActionListener(this::jMenuItem6ActionPerformed);
         jMenu2.add(jMenuItem6);
 
-        jMenuItem1.setText("Consultar Empréstimo");
-        jMenuItem1.addActionListener(this::jMenuItem1ActionPerformed);
-        jMenu2.add(jMenuItem1);
-
         jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Consultas");
+
+        jMenuItem5.setText("Consultar Empréstimos");
+        jMenuItem5.addActionListener(this::jMenuItem5ActionPerformed);
+        jMenu3.add(jMenuItem5);
+
+        jMenuItem1.setText("Estatísticas por Cliente");
+        jMenuItem1.addActionListener(this::jMenuItem1ActionPerformed);
+        jMenu3.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -154,11 +164,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
         telaEmprestimo.setVisible(true);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+        TelaConsultaEmprestimo telaConsulta = new TelaConsultaEmprestimo();
+        telaConsulta.setLocationRelativeTo(null);
+        telaConsulta.setVisible(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        TelaConsultaEmprestimo telaConsultaEmprestimo = new TelaConsultaEmprestimo();
-        telaConsultaEmprestimo.setLocationRelativeTo(null);
-        telaConsultaEmprestimo.setVisible(true);
+        TelaEstatisticasCliente telaEstatistica = new TelaEstatisticasCliente();
+        telaEstatistica.setLocationRelativeTo(null);
+        telaEstatistica.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
@@ -192,12 +209,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuCliente;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     // End of variables declaration//GEN-END:variables
 }

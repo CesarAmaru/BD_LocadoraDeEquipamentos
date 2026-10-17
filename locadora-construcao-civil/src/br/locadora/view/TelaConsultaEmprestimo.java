@@ -9,8 +9,8 @@ import br.locadora.model.entities.Emprestimo;
 import br.locadora.model.entities.ItemEmprestimo;
 import br.locadora.model.exceptions.DomainException;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -37,13 +37,22 @@ public class TelaConsultaEmprestimo extends javax.swing.JFrame {
     }
 
     private void carregarTabela() {
+        filtrarTabela();
+    }
+
+    private void filtrarTabela() {
+        String nomeBusca = jTpesquisaCliente.getText();
+
+        Object selectedStatus = jComboBoxStatus.getSelectedItem();
+        String statusBusca = (selectedStatus != null) ? selectedStatus.toString() : "Todos";
+
         DefaultTableModel modelo = (DefaultTableModel) jTemprestimos.getModel();
         modelo.setRowCount(0);
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         try {
-            List<Emprestimo> lista = emprestimoController.listarTodos();
+            List<Emprestimo> lista = emprestimoController.buscarPorFiltro(nomeBusca, statusBusca);
 
             for (Emprestimo emp : lista) {
                 modelo.addRow(new Object[]{
@@ -56,40 +65,7 @@ public class TelaConsultaEmprestimo extends javax.swing.JFrame {
                 });
             }
         } catch (DomainException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar os empréstimos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void filtrarTabela() {
-        String nomeBusca = jTpesquisaCliente.getText().toLowerCase();
-        String statusBusca = jComboBoxStatus.getSelectedItem().toString();
-
-        DefaultTableModel modelo = (DefaultTableModel) jTemprestimos.getModel();
-        modelo.setRowCount(0);
-
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        try {
-            List<Emprestimo> lista = emprestimoController.listarTodos();
-
-            for (Emprestimo emp : lista) {
-                boolean bateNome = emp.getCliente().getNome().toLowerCase().contains(nomeBusca);
-                boolean bateStatus = statusBusca.equals("Todos")
-                        || (emp.getStatus() != null && emp.getStatus().getStatus().equalsIgnoreCase(statusBusca));
-
-                if (bateNome && bateStatus) {
-                    modelo.addRow(new Object[]{
-                        emp.getIdEmprestimo(),
-                        emp.getCliente().getNome(),
-                        emp.getFuncionario().getNome(),
-                        emp.getDataEmprestimo() != null ? emp.getDataEmprestimo().format(fmt) : "",
-                        emp.getDataDevolucaoPrevista() != null ? emp.getDataDevolucaoPrevista().format(fmt) : "",
-                        emp.getStatus() != null ? emp.getStatus().getStatus() : ""
-                    });
-                }
-            }
-        } catch (DomainException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao filtrar os empréstimos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Erro ao filtrar empréstimos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -293,10 +269,9 @@ public class TelaConsultaEmprestimo extends javax.swing.JFrame {
                 LocalDate dtEmp = LocalDate.parse(dataEmpStr, fmt);
                 LocalDate dtDev = LocalDate.parse(dataDevStr, fmt);
 
-                Period periodo = Period.between(dtEmp, dtDev);
-                int dias = periodo.getDays();
+                long dias = ChronoUnit.DAYS.between(dtEmp, dtDev);
 
-                if (dias <= 0 || periodo.isNegative()) {
+                if (dias <= 0) {
                     dias = 1;
                 }
 

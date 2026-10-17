@@ -5,8 +5,10 @@
 package br.locadora.controller;
 
 import br.locadora.model.dao.ClienteDAO;
+import br.locadora.model.dto.EstatisticaClienteDTO;
 import br.locadora.model.entities.Cliente;
 import br.locadora.model.exceptions.DomainException;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -76,4 +78,8 @@ public class ClienteController {
             throw new DomainException("O limite de crédito informado é inválido.");
         }
     }
+    
+    public List<EstatisticaClienteDTO> buscarEstatisticasPorFiltro(String nome, LocalDate dataInicio, LocalDate dataFim) {
+    return clienteDAO.buscarEstatisticasPorFiltro(nome, dataInicio, dataFim);
+}
 }
