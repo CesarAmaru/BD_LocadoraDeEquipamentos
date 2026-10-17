@@ -137,15 +137,22 @@ public class TelaCliente extends javax.swing.JFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Nome", "CPF/CNPJ", "Email", "Telefone", "Limite_Crédito"
+                "Id", "Nome", "CPF/CNPJ", "Email", "Telefone", "Limite de Crédito"
             }
         ) {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jTableCLientes.addMouseListener(new java.awt.event.MouseAdapter() {
