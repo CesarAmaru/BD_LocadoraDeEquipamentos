@@ -1,0 +1,8 @@
+build/
+dist/
+nbproject/private/
+config.properties
+*.class
+locadora-construcao-civil/build/classes/.netbeans_automatic_build
+locadora-construcao-civil/build/classes/.netbeans_update_resources
+locadora-construcao-civil/build/classes/br/locadora/controller/CategoriaController.class
