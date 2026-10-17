@@ -27,26 +27,34 @@ public class EmprestimoController {
         
         validarDados(cliente, funcionario, formaPagamento, dataEmprestimo, dataDevolucaoPrevista, itens);
 
-        Emprestimo emprestimo = new Emprestimo();
-        emprestimo.setCliente(cliente);
-        emprestimo.setFuncionario(funcionario); 
-        emprestimo.setFormaPagamento(formaPagamento);
-        emprestimo.setDataEmprestimo(dataEmprestimo);
-        emprestimo.setDataDevolucaoPrevista(dataDevolucaoPrevista);
-        emprestimo.setStatus(StatusEmprestimo.EM_ABERTO); 
+    Emprestimo emprestimo = new Emprestimo();
+    emprestimo.setCliente(cliente);
+    emprestimo.setFuncionario(funcionario); 
+    emprestimo.setFormaPagamento(formaPagamento);
+    emprestimo.setDataEmprestimo(dataEmprestimo);
+    emprestimo.setDataDevolucaoPrevista(dataDevolucaoPrevista);
+    emprestimo.setStatus(StatusEmprestimo.EM_ABERTO); 
 
-        double valorTotal = 0.0;
+    double valorTotal = 0.0;
+    
+    for (ItemEmprestimo item : itens) {
+        emprestimo.insertItens(item); 
         
-        for (ItemEmprestimo item : itens) {
-            emprestimo.insertItens(item); 
-            
-            if (item.getSubtotal() != null) {
-                valorTotal += item.getSubtotal(); 
-            }
+        if (item.getSubtotal() != null) {
+            valorTotal += item.getSubtotal(); 
         }
-        
-        emprestimo.setValorTotal(valorTotal);
-        dao.inserir(emprestimo);
+    }
+    
+    emprestimo.setValorTotal(valorTotal);
+    
+    if ((cliente.getLimiteCredito() != null) && (valorTotal > cliente.getLimiteCredito())) {
+        throw new DomainException(String.format(
+            "Operação bloqueada: O valor do empréstimo (R$ %.2f) ultrapassa o limite de crédito do cliente (R$ %.2f).", 
+            valorTotal, cliente.getLimiteCredito()
+        ));
+    }
+    
+    dao.inserir(emprestimo);
     }
 
     public void atualizar(Integer idEmprestimo, Cliente cliente, Funcionario funcionario, FormaPagamento formaPagamento, LocalDate dataEmprestimo, LocalDate dataDevolucaoPrevista, StatusEmprestimo status) {

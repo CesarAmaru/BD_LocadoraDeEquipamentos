@@ -27,19 +27,18 @@ public class EmprestimoDAO implements InterfaceDAO<Emprestimo> {
     @Override
     public void inserir(Emprestimo objeto) {
         String sqlEmprestimo = "INSERT INTO emprestimo (id_cliente, id_funcionario, data_emissao, data_prevista_devolucao, status_emprestimo) VALUES (?, ?, ?, ?, ?)";
-        
-        
+
         String sqlItem = "INSERT INTO item_emprestimo (id_emprestimo, id_equipamento, valor_diaria_aplicado) VALUES (?, ?, ?)";
 
         try (Connection cn = DAO.abrirBanco()) {
-            cn.setAutoCommit(false); 
+            cn.setAutoCommit(false);
 
             try (PreparedStatement psEmprestimo = cn.prepareStatement(sqlEmprestimo, Statement.RETURN_GENERATED_KEYS)) {
-                
-                psEmprestimo.setInt(1, objeto.getCliente().getIdPessoa()); 
-                psEmprestimo.setInt(2, objeto.getFuncionario().getIdPessoa()); 
-                psEmprestimo.setDate(3, Date.valueOf(objeto.getDataEmprestimo())); 
-                psEmprestimo.setDate(4, Date.valueOf(objeto.getDataDevolucaoPrevista())); 
+
+                psEmprestimo.setInt(1, objeto.getCliente().getIdPessoa());
+                psEmprestimo.setInt(2, objeto.getFuncionario().getIdPessoa());
+                psEmprestimo.setDate(3, Date.valueOf(objeto.getDataEmprestimo()));
+                psEmprestimo.setDate(4, Date.valueOf(objeto.getDataDevolucaoPrevista()));
                 psEmprestimo.setString(5, objeto.getStatus() != null ? objeto.getStatus().getStatus() : StatusEmprestimo.EM_ABERTO.getStatus());
 
                 psEmprestimo.executeUpdate();
@@ -53,7 +52,7 @@ public class EmprestimoDAO implements InterfaceDAO<Emprestimo> {
                             for (ItemEmprestimo item : objeto.getItens()) {
                                 psItem.setInt(1, idGerado);
                                 psItem.setInt(2, item.getEquipamento().getIdEquipamento());
-                                psItem.setDouble(3, item.getValorDiariaAplicado());                                                     
+                                psItem.setDouble(3, item.getValorDiariaAplicado());
                                 psItem.executeUpdate();
                             }
                         }
@@ -116,7 +115,7 @@ public class EmprestimoDAO implements InterfaceDAO<Emprestimo> {
                 + "INNER JOIN pessoa pc ON emp.id_cliente = pc.id_pessoa "
                 + "INNER JOIN pessoa pf ON emp.id_funcionario = pf.id_pessoa "
                 + "ORDER BY emp.id_emprestimo DESC";
-        
+
         List<Emprestimo> lista = new ArrayList<>();
 
         try (Connection cn = DAO.abrirBanco(); PreparedStatement ps = cn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -154,7 +153,7 @@ public class EmprestimoDAO implements InterfaceDAO<Emprestimo> {
             ps.setInt(1, v.getIdEmprestimo());
             ps.executeUpdate();
         } catch (SQLException e) {
-            if("23000".equals(e.getSQLState())){
+            if ("23000".equals(e.getSQLState())) {
                 throw new DataBaseException("Não é possível excluir esse registro pois ele está sendo utilizado em outro lugar", e);
             }
             throw new DataBaseException("Erro ao deletar o empréstimo: " + e.getMessage(), e);
@@ -178,16 +177,16 @@ public class EmprestimoDAO implements InterfaceDAO<Emprestimo> {
             throw new DataBaseException("Erro ao atualizar o empréstimo: " + e.getMessage(), e);
         }
     }
-    
+
     public List<ItemEmprestimo> buscarItensPorEmprestimo(Integer idEmprestimo) {
         String sql = "SELECT ie.valor_diaria_aplicado, eq.id_equipamento, eq.numero_serie, m.nome AS nome_modelo "
-                   + "FROM item_emprestimo ie "
-                   + "INNER JOIN equipamento eq ON ie.id_equipamento = eq.id_equipamento "
-                   + "INNER JOIN modelo_equipamento m ON eq.id_modeloE = m.id_modeloE "
-                   + "WHERE ie.id_emprestimo = ?";
-        
+                + "FROM item_emprestimo ie "
+                + "INNER JOIN equipamento eq ON ie.id_equipamento = eq.id_equipamento "
+                + "INNER JOIN modelo_equipamento m ON eq.id_modeloE = m.id_modeloE "
+                + "WHERE ie.id_emprestimo = ?";
+
         List<ItemEmprestimo> lista = new ArrayList<>();
-        
+
         try (Connection cn = DAO.abrirBanco(); PreparedStatement ps = cn.prepareStatement(sql)) {
             ps.setInt(1, idEmprestimo);
             try (ResultSet rs = ps.executeQuery()) {
@@ -201,7 +200,7 @@ public class EmprestimoDAO implements InterfaceDAO<Emprestimo> {
                     ItemEmprestimo item = new ItemEmprestimo();
                     item.setEquipamento(eq);
                     item.setValorDiariaAplicado(rs.getDouble("valor_diaria_aplicado"));
-                    
+
                     lista.add(item);
                 }
             }
@@ -210,19 +209,18 @@ public class EmprestimoDAO implements InterfaceDAO<Emprestimo> {
             throw new DataBaseException("Erro ao buscar itens do empréstimo: " + e.getMessage(), e);
         }
     }
-    
+
     public void registrarDevolucao(Integer idEmprestimo) {
         String sqlEmprestimo = "UPDATE emprestimo SET status_emprestimo = ? WHERE id_emprestimo = ?";
-        
+
         String sqlEquipamento = "UPDATE equipamento SET status = 'Disponível' "
-                              + "WHERE id_equipamento IN (SELECT id_equipamento FROM item_emprestimo WHERE id_emprestimo = ?)";
+                + "WHERE id_equipamento IN (SELECT id_equipamento FROM item_emprestimo WHERE id_emprestimo = ?)";
 
         try (Connection cn = DAO.abrirBanco()) {
             cn.setAutoCommit(false);
 
-            try (PreparedStatement psEmp = cn.prepareStatement(sqlEmprestimo);
-                 PreparedStatement psEqp = cn.prepareStatement(sqlEquipamento)) {
-                psEmp.setString(1, "Finalizado"); 
+            try (PreparedStatement psEmp = cn.prepareStatement(sqlEmprestimo); PreparedStatement psEqp = cn.prepareStatement(sqlEquipamento)) {
+                psEmp.setString(1, "Finalizado");
                 psEmp.setInt(2, idEmprestimo);
                 psEmp.executeUpdate();
 
@@ -231,7 +229,7 @@ public class EmprestimoDAO implements InterfaceDAO<Emprestimo> {
 
                 cn.commit();
             } catch (SQLException e) {
-                cn.rollback(); 
+                cn.rollback();
                 throw e;
             } finally {
                 cn.setAutoCommit(true);
@@ -240,59 +238,74 @@ public class EmprestimoDAO implements InterfaceDAO<Emprestimo> {
             throw new DataBaseException("Erro ao registar a devolução: " + e.getMessage(), e);
         }
     }
-    
+
     public List<Emprestimo> buscarPorFiltro(String nomeCliente, String status) {
-    StringBuilder sql = new StringBuilder(
-        "SELECT emp.*, pc.nome AS nome_cliente, pf.nome AS nome_func " +
-        "FROM emprestimo emp " +
-        "INNER JOIN pessoa pc ON emp.id_cliente = pc.id_pessoa " +
-        "INNER JOIN pessoa pf ON emp.id_funcionario = pf.id_pessoa " +
-        "WHERE LOWER(pc.nome) LIKE ?"
-    );
+        StringBuilder sql = new StringBuilder(
+                "SELECT emp.*, pc.nome AS nome_cliente, pf.nome AS nome_func "
+                + "FROM emprestimo emp "
+                + "INNER JOIN pessoa pc ON emp.id_cliente = pc.id_pessoa "
+                + "INNER JOIN pessoa pf ON emp.id_funcionario = pf.id_pessoa "
+                + "WHERE LOWER(pc.nome) LIKE ?"
+        );
 
-    boolean filtrarStatus = status != null && !status.equalsIgnoreCase("Todos") && !status.trim().isEmpty();
-    if (filtrarStatus) {
-        sql.append(" AND emp.status_emprestimo = ?");
-    }
-    
-    sql.append(" ORDER BY emp.id_emprestimo DESC");
-
-    List<Emprestimo> lista = new ArrayList<>();
-
-    try (Connection cn = DAO.abrirBanco(); 
-         PreparedStatement ps = cn.prepareStatement(sql.toString())) {
-        ps.setString(1, "%" + (nomeCliente != null ? nomeCliente.toLowerCase().trim() : "") + "%");
-
+        boolean filtrarStatus = status != null && !status.equalsIgnoreCase("Todos") && !status.trim().isEmpty();
         if (filtrarStatus) {
-            ps.setString(2, status.trim());
+            sql.append(" AND emp.status_emprestimo = ?");
         }
 
-        try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Cliente cli = new Cliente();
-                cli.setIdPessoa(rs.getInt("id_cliente"));
-                cli.setNome(rs.getString("nome_cliente"));
+        sql.append(" ORDER BY emp.id_emprestimo DESC");
 
-                Funcionario func = new Funcionario();
-                func.setIdPessoa(rs.getInt("id_funcionario"));
-                func.setNome(rs.getString("nome_func"));
+        List<Emprestimo> lista = new ArrayList<>();
 
-                Emprestimo emp = new Emprestimo();
-                emp.setIdEmprestimo(rs.getInt("id_emprestimo"));
-                emp.setCliente(cli);
-                emp.setFuncionario(func);
-                emp.setDataEmprestimo(rs.getDate("data_emissao").toLocalDate());
-                emp.setDataDevolucaoPrevista(rs.getDate("data_prevista_devolucao").toLocalDate());
-                emp.setStatus(StatusEmprestimo.fromDescricao(rs.getString("status_emprestimo")));
+        try (Connection cn = DAO.abrirBanco(); PreparedStatement ps = cn.prepareStatement(sql.toString())) {
+            ps.setString(1, "%" + (nomeCliente != null ? nomeCliente.toLowerCase().trim() : "") + "%");
 
-                lista.add(emp);
+            if (filtrarStatus) {
+                ps.setString(2, status.trim());
             }
-        }
-        return lista;
 
-    } catch (SQLException e) {
-        throw new DataBaseException("Erro ao filtrar os empréstimos no banco de dados: " + e.getMessage(), e);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Cliente cli = new Cliente();
+                    cli.setIdPessoa(rs.getInt("id_cliente"));
+                    cli.setNome(rs.getString("nome_cliente"));
+
+                    Funcionario func = new Funcionario();
+                    func.setIdPessoa(rs.getInt("id_funcionario"));
+                    func.setNome(rs.getString("nome_func"));
+
+                    Emprestimo emp = new Emprestimo();
+                    emp.setIdEmprestimo(rs.getInt("id_emprestimo"));
+                    emp.setCliente(cli);
+                    emp.setFuncionario(func);
+                    emp.setDataEmprestimo(rs.getDate("data_emissao").toLocalDate());
+                    emp.setDataDevolucaoPrevista(rs.getDate("data_prevista_devolucao").toLocalDate());
+                    emp.setStatus(StatusEmprestimo.fromDescricao(rs.getString("status_emprestimo")));
+
+                    lista.add(emp);
+                }
+            }
+            return lista;
+
+        } catch (SQLException e) {
+            throw new DataBaseException("Erro ao filtrar os empréstimos no banco de dados: " + e.getMessage(), e);
+        }
     }
-}
-    
+
+    public double somarDividaAtivaDoCliente(Integer idCliente) {
+        String sql = "SELECT SUM(valor_total) AS divida FROM emprestimo WHERE id_cliente = ? AND status_emprestimo = 'Aberto'";
+        try (Connection cn = DAO.abrirBanco(); PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setInt(1, idCliente);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("divida");
+                }
+            }
+            return 0.0;
+        } catch (SQLException e) {
+            throw new DataBaseException("Erro ao calcular dívida do cliente.", e);
+        }
+    }
+
 }
