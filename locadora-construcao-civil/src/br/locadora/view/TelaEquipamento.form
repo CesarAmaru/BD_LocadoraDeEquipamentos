@@ -40,24 +40,22 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jScrollPane1" min="-2" pref="372" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="jBsalvar" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jBexcluir" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="jBatualizar" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jBlimpar" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
                           <Component id="jComboBoxModelos" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jScrollPane1" min="-2" pref="455" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jBatualizar" max="32767" attributes="0"/>
+                                  <Component id="jBsalvar" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jBlimpar" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jBexcluir" alignment="0" min="-2" pref="76" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace min="100" pref="149" max="32767" attributes="0"/>
+              <EmptySpace min="194" pref="87" max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
@@ -96,9 +94,11 @@
               <Component id="jComboBoxModelos" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="59" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" min="-2" pref="254" max="-2" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="jScrollPane1" min="-2" pref="254" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
                       <Component id="jBsalvar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jBatualizar" min="-2" max="-2" attributes="0"/>
@@ -106,9 +106,9 @@
                       <Component id="jBlimpar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jBexcluir" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="152" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -173,7 +173,7 @@
                 <Column editable="false" title="Num S&#xe9;rie" type="java.lang.String"/>
                 <Column editable="false" title="Status" type="java.lang.String"/>
                 <Column editable="false" title="Modelo" type="java.lang.Object"/>
-                <Column editable="false" title="Valor Diaria" type="java.lang.Double"/>
+                <Column editable="false" title="Valor Diaria" type="java.lang.String"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
