@@ -62,13 +62,12 @@
                           <Group type="102" attributes="0">
                               <Component id="jScrollPane1" min="-2" pref="372" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="jBsalvar" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jBlimpar" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jBexcluir" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Component id="jBsalvar" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jBlimpar" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jBexcluir" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                                   <Component id="jBatualizar" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -79,7 +78,7 @@
                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="71" max="32767" attributes="0"/>
+              <EmptySpace pref="149" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -112,15 +111,13 @@
                   <Component id="jScrollPane1" min="-2" pref="254" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jBsalvar" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jBatualizar" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jBexcluir" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jBlimpar" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="jBsalvar" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jBatualizar" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                      <Component id="jBlimpar" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jBexcluir" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>

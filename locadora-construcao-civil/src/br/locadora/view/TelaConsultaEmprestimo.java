@@ -97,7 +97,7 @@ public class TelaConsultaEmprestimo extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setText("Consulta Empréstimos");
+        jLabel1.setText("Consultar Empréstimos");
 
         jBvoltar.setText("<- Voltar");
         jBvoltar.addActionListener(this::jBvoltarActionPerformed);
@@ -349,7 +349,7 @@ public class TelaConsultaEmprestimo extends javax.swing.JFrame {
 
                     emprestimoController.registrarDevolucao(idEmprestimo);
 
-                    JOptionPane.showMessageDialog(this, "Devolução registada com sucesso! Os equipamentos já estão disponíveis para um novo aluguer.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Devolução registada com sucesso! Os equipamentos já estão disponíveis para um novo aluguel.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
                     carregarTabela();
                 }
