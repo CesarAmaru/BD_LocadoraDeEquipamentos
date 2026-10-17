@@ -1,6 +1,7 @@
 build/
 dist/
 nbproject/private/
+locadora-construcao-civil\nbproject\private
 locadora-construcao-civil/config.properties
 *.class
 locadora-construcao-civil/build/classes/.netbeans_automatic_build
