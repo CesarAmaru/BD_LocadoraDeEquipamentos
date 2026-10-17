@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
   </Properties>
@@ -83,12 +83,12 @@
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="6" rowCount="4">
-                <Column editable="true" title="Categoria" type="java.lang.String"/>
-                <Column editable="true" title="Modelo" type="java.lang.String"/>
-                <Column editable="true" title="Marca" type="java.lang.String"/>
-                <Column editable="true" title="Di&#xe1;ria Padr&#xe3;o" type="java.lang.String"/>
-                <Column editable="true" title="Total de Loca&#xe7;&#xf5;es" type="java.lang.String"/>
-                <Column editable="true" title="Faturamento Total" type="java.lang.String"/>
+                <Column editable="false" title="Categoria" type="java.lang.String"/>
+                <Column editable="false" title="Modelo" type="java.lang.String"/>
+                <Column editable="false" title="Marca" type="java.lang.String"/>
+                <Column editable="false" title="Di&#xe1;ria Padr&#xe3;o" type="java.lang.String"/>
+                <Column editable="false" title="Total de Loca&#xe7;&#xf5;es" type="java.lang.String"/>
+                <Column editable="false" title="Faturamento Total" type="java.lang.String"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
