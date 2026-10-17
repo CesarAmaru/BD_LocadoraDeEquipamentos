@@ -1,5 +1,5 @@
-build/
-dist/
+locadora-construcao-civil/build/
+locadora-construcao-civil/dist/
 locadora-construcao-civil/nbproject/private/
 locadora-construcao-civil/config.properties
 *.class
