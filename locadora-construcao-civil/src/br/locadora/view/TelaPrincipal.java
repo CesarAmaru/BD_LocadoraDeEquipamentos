@@ -96,7 +96,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuItem1.addActionListener(this::jMenuItem1ActionPerformed);
         jMenu3.add(jMenuItem1);
 
-        jMenuItem7.setText("Relatório de Modelos");
+        jMenuItem7.setText("View Relatório de Modelos");
         jMenuItem7.addActionListener(this::jMenuItem7ActionPerformed);
         jMenu3.add(jMenuItem7);
 
