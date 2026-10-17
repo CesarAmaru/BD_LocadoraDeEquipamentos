@@ -306,3 +306,24 @@ CREATE INDEX idx_emprestimo_status ON emprestimo(status_emprestimo);
 CREATE INDEX idx_equipamento_status ON equipamento(status);
 CREATE INDEX idx_historico_data ON historico_status_equipamento(data_alteracao);
 CREATE INDEX idx_pagamento_valor ON pagamento(valor_total);
+
+
+-- =============================================================================
+-- VIEW
+-- =============================================================================
+create or replace view vw_modelos_mais_alugados as
+SELECT 
+    cat.nome_categoria,
+    me.id_modeloE,
+    me.nome AS modelo,
+    me.marca,
+    me.valor_diaria_padrao,
+    COUNT(ie.id_equipamento) AS total_locacoes,
+    COALESCE(SUM(ie.valor_diaria_aplicado), 0.00) AS faturamento_acumulado
+FROM modelo_equipamento me
+INNER JOIN categoria cat ON me.id_categoria = cat.id_categoria
+LEFT JOIN equipamento eq ON me.id_modeloE = eq.id_modeloE
+LEFT JOIN item_emprestimo ie ON eq.id_equipamento = ie.id_equipamento
+LEFT JOIN emprestimo emp ON ie.id_emprestimo = emp.id_emprestimo AND emp.status_emprestimo != 'Cancelado'
+GROUP BY me.id_modeloE, me.nome, me.marca, me.valor_diaria_padrao, cat.nome_categoria
+ORDER BY total_locacoes DESC, faturamento_acumulado DESC;
