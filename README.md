@@ -1,7 +1,5 @@
 # BD_LocadoraDeEquipamentos
 
-# BD_LocadoraDeEquipamentos
-
 ## Sobre o Projeto
 
 Um sistema dedicado à gestão operacional e financeira de uma Locadora de Equipamentos para Construção Civil. O negócio abrange desde o registo cadastral de clientes e funcionários até ao controlo de equipamentos, gestão do ciclo de vida de empréstimos e processamento financeiro de pagamentos.
