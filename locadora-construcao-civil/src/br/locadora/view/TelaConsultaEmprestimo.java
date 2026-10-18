@@ -41,33 +41,36 @@ public class TelaConsultaEmprestimo extends javax.swing.JFrame {
     }
 
     private void filtrarTabela() {
-        String nomeBusca = jTpesquisaCliente.getText();
-
-        Object selectedStatus = jComboBoxStatus.getSelectedItem();
-        String statusBusca = (selectedStatus != null) ? selectedStatus.toString() : "Todos";
-
-        DefaultTableModel modelo = (DefaultTableModel) jTemprestimos.getModel();
-        modelo.setRowCount(0);
-
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        try {
-            List<Emprestimo> lista = emprestimoController.buscarPorFiltro(nomeBusca, statusBusca);
-
-            for (Emprestimo emp : lista) {
-                modelo.addRow(new Object[]{
-                    emp.getIdEmprestimo(),
-                    emp.getCliente().getNome(),
-                    emp.getFuncionario().getNome(),
-                    emp.getDataEmprestimo() != null ? emp.getDataEmprestimo().format(fmt) : "",
-                    emp.getDataDevolucaoPrevista() != null ? emp.getDataDevolucaoPrevista().format(fmt) : "",
-                    emp.getStatus() != null ? emp.getStatus().getStatus() : ""
-                });
-            }
-        } catch (DomainException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao filtrar empréstimos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    String nomeBusca = jTpesquisaCliente.getText();
+    Object selectedStatus = jComboBoxStatus.getSelectedItem();
+    String statusBusca = (selectedStatus != null) ? selectedStatus.toString() : "Todos";
+    
+    DefaultTableModel modelo = (DefaultTableModel) jTemprestimos.getModel();
+    
+    modelo.setColumnIdentifiers(new Object[]{
+        "Id", "Cliente", "Funcionário", "Qtd. Itens", "Data Emissão", "Data Devolução", "Status"
+    });
+    
+    modelo.setRowCount(0);
+    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    
+    try {
+        List<Emprestimo> lista = emprestimoController.buscarPorFiltro(nomeBusca, statusBusca);
+        for (Emprestimo emp : lista) {
+            modelo.addRow(new Object[]{
+                emp.getIdEmprestimo(),
+                emp.getCliente().getNome(),
+                emp.getFuncionario().getNome(),
+                emp.getQuantidadeItensAgregada(),
+                emp.getDataEmprestimo() != null ? emp.getDataEmprestimo().format(fmt) : "",
+                emp.getDataDevolucaoPrevista() != null ? emp.getDataDevolucaoPrevista().format(fmt) : "",
+                emp.getStatus() != null ? emp.getStatus().getStatus() : ""
+            });
         }
+    } catch (DomainException e) {
+        JOptionPane.showMessageDialog(this, "Erro ao filtrar empréstimos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -104,20 +107,20 @@ public class TelaConsultaEmprestimo extends javax.swing.JFrame {
 
         jTemprestimos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Cliente", "Funcionário", "Data Emissão", "Data Devolução", "Status"
+                "Id", "Cliente", "Funcionário", "Quantidade Itens", "Data Emissão", "Data Devolução", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, true, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -270,8 +273,8 @@ public class TelaConsultaEmprestimo extends javax.swing.JFrame {
         if (linhaSelecionada >= 0) {
             try {
                 int idEmprestimo = (int) jTemprestimos.getValueAt(linhaSelecionada, 0);
-                String dataEmpStr = (String) jTemprestimos.getValueAt(linhaSelecionada, 3);
-                String dataDevStr = (String) jTemprestimos.getValueAt(linhaSelecionada, 4);
+                String dataEmpStr = (String) jTemprestimos.getValueAt(linhaSelecionada, 4);
+                String dataDevStr = (String) jTemprestimos.getValueAt(linhaSelecionada, 5);
                 DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 LocalDate dtEmp = LocalDate.parse(dataEmpStr, fmt);
                 LocalDate dtDev = LocalDate.parse(dataDevStr, fmt);
@@ -337,7 +340,7 @@ public class TelaConsultaEmprestimo extends javax.swing.JFrame {
 
         if (linhaSelecionada >= 0) {
             try {
-                String statusAtual = (String) jTemprestimos.getValueAt(linhaSelecionada, 5);
+                String statusAtual = (String) jTemprestimos.getValueAt(linhaSelecionada, 6);
 
                 if (statusAtual.equalsIgnoreCase("Finalizado") || statusAtual.equalsIgnoreCase("Devolvido")) {
                     JOptionPane.showMessageDialog(this, "Este empréstimo já se encontra finalizado.", "Aviso", JOptionPane.INFORMATION_MESSAGE);

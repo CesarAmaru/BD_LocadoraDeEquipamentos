@@ -240,57 +240,65 @@ public class EmprestimoDAO implements InterfaceDAO<Emprestimo> {
     }
 
     public List<Emprestimo> buscarPorFiltro(String nomeCliente, String status) {
-        StringBuilder sql = new StringBuilder(
-                "SELECT emp.*, pc.nome AS nome_cliente, pf.nome AS nome_func "
-                + "FROM emprestimo emp "
-                + "INNER JOIN pessoa pc ON emp.id_cliente = pc.id_pessoa "
-                + "INNER JOIN pessoa pf ON emp.id_funcionario = pf.id_pessoa "
-                + "WHERE LOWER(pc.nome) LIKE ?"
-        );
+    StringBuilder sql = new StringBuilder(
+            "SELECT emp.id_emprestimo, emp.data_emissao, emp.data_prevista_devolucao, emp.status_emprestimo, "
+            + "pc.id_pessoa AS id_cliente, pc.nome AS nome_cliente, "
+            + "pf.id_pessoa AS id_funcionario, pf.nome AS nome_func, "
+            + "COUNT(ie.id_equipamento) AS qtd_itens " 
+            + "FROM emprestimo emp "
+            + "INNER JOIN pessoa pc ON emp.id_cliente = pc.id_pessoa " 
+            + "INNER JOIN pessoa pf ON emp.id_funcionario = pf.id_pessoa " 
+            + "LEFT JOIN item_emprestimo ie ON emp.id_emprestimo = ie.id_emprestimo " 
+            + "WHERE LOWER(pc.nome) LIKE ? "
+    );
 
-        boolean filtrarStatus = status != null && !status.equalsIgnoreCase("Todos") && !status.trim().isEmpty();
-        if (filtrarStatus) {
-            sql.append(" AND emp.status_emprestimo = ?");
-        }
-
-        sql.append(" ORDER BY emp.id_emprestimo DESC");
-
-        List<Emprestimo> lista = new ArrayList<>();
-
-        try (Connection cn = DAO.abrirBanco(); PreparedStatement ps = cn.prepareStatement(sql.toString())) {
-            ps.setString(1, "%" + (nomeCliente != null ? nomeCliente.toLowerCase().trim() : "") + "%");
-
-            if (filtrarStatus) {
-                ps.setString(2, status.trim());
-            }
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Cliente cli = new Cliente();
-                    cli.setIdPessoa(rs.getInt("id_cliente"));
-                    cli.setNome(rs.getString("nome_cliente"));
-
-                    Funcionario func = new Funcionario();
-                    func.setIdPessoa(rs.getInt("id_funcionario"));
-                    func.setNome(rs.getString("nome_func"));
-
-                    Emprestimo emp = new Emprestimo();
-                    emp.setIdEmprestimo(rs.getInt("id_emprestimo"));
-                    emp.setCliente(cli);
-                    emp.setFuncionario(func);
-                    emp.setDataEmprestimo(rs.getDate("data_emissao").toLocalDate());
-                    emp.setDataDevolucaoPrevista(rs.getDate("data_prevista_devolucao").toLocalDate());
-                    emp.setStatus(StatusEmprestimo.fromDescricao(rs.getString("status_emprestimo")));
-
-                    lista.add(emp);
-                }
-            }
-            return lista;
-
-        } catch (SQLException e) {
-            throw new DataBaseException("Erro ao filtrar os empréstimos no banco de dados: " + e.getMessage(), e);
-        }
+    boolean filtrarStatus = status != null && !status.equalsIgnoreCase("Todos") && !status.trim().isEmpty();
+    if (filtrarStatus) {
+        sql.append(" AND emp.status_emprestimo = ? ");
     }
+    
+    sql.append(" GROUP BY emp.id_emprestimo, emp.data_emissao, emp.data_prevista_devolucao, emp.status_emprestimo, ")
+       .append("pc.id_pessoa, pc.nome, pf.id_pessoa, pf.nome ")
+       .append("ORDER BY emp.id_emprestimo DESC");
+
+    List<Emprestimo> lista = new ArrayList<>();
+    try (Connection cn = DAO.abrirBanco(); PreparedStatement ps = cn.prepareStatement(sql.toString())) {
+        
+        ps.setString(1, "%" + (nomeCliente != null ? nomeCliente.toLowerCase().trim() : "") + "%");
+        
+        if (filtrarStatus) {
+            ps.setString(2, status.trim());
+        }
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Cliente cli = new Cliente();
+                cli.setIdPessoa(rs.getInt("id_cliente"));
+                cli.setNome(rs.getString("nome_cliente"));
+                
+                Funcionario func = new Funcionario();
+                func.setIdPessoa(rs.getInt("id_funcionario"));
+                func.setNome(rs.getString("nome_func"));
+                
+                Emprestimo emp = new Emprestimo();
+                emp.setIdEmprestimo(rs.getInt("id_emprestimo"));
+                emp.setCliente(cli);
+                emp.setFuncionario(func);
+                emp.setDataEmprestimo(rs.getDate("data_emissao").toLocalDate());
+                emp.setDataDevolucaoPrevista(rs.getDate("data_prevista_devolucao").toLocalDate());
+                emp.setStatus(StatusEmprestimo.fromDescricao(rs.getString("status_emprestimo")));
+                
+                // Salvando o resultado da agregação no objeto
+                emp.setQuantidadeItensAgregada(rs.getInt("qtd_itens")); 
+                
+                lista.add(emp);
+            }
+        }
+        return lista;
+    } catch (SQLException e) {
+        throw new DataBaseException("Erro ao filtrar os empréstimos no banco de dados: " + e.getMessage(), e);
+    }
+}
 
     public double somarDividaAtivaDoCliente(Integer idCliente) {
         String sql = "SELECT SUM(valor_total) AS divida FROM emprestimo WHERE id_cliente = ? AND status_emprestimo = 'Aberto'";

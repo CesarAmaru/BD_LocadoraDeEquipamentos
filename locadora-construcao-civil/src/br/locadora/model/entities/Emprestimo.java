@@ -19,6 +19,7 @@ public class Emprestimo {
     private LocalDate dataDevolucaoPrevista;
     private Double valorTotal;
     private StatusEmprestimo status;
+    private Integer quantidadeItensAgregada;
 
     private List<ItemEmprestimo> itens = new ArrayList<>();
 
@@ -85,6 +86,16 @@ public class Emprestimo {
     public void setStatus(StatusEmprestimo status) {
         this.status = status;
     }
+
+    public Integer getQuantidadeItensAgregada() {
+        return quantidadeItensAgregada;
+    }
+
+    public void setQuantidadeItensAgregada(Integer quantidadeItensAgregada) {
+        this.quantidadeItensAgregada = quantidadeItensAgregada;
+    }
+    
+    
 
     public List<ItemEmprestimo> getItens() {
         return itens;
