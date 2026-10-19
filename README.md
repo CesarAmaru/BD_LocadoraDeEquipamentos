@@ -6,6 +6,8 @@ Um sistema dedicado à gestão operacional e financeira de uma Locadora de Equip
 
 Este projeto foi desenvolvido com foco acadêmico na modelação de bases de dados relacionais, englobando todas as etapas de engenharia de software, desde a conceção dos requisitos de negócio e modelação concetual até normalização e implementação de scripts estruturais e de consulta.
 
+O trabalho é dividido em duas etapas: a **Etapa 1** cobre a modelagem e a implementação inicial do banco (MER, modelo lógico, normalização e scripts SQL); a **Etapa 2** cobre a aplicação com interface, o projeto físico (tipos de dados, índices e crescimento das tabelas) e a manutenção (backup, retenção e restauração).
+
 ## Principais Funcionalidades
 
 * **Gestão de Pessoas:** Registo centralizado utilizando herança relacional para separar Clientes e Funcionários, incluindo o mapeamento da hierarquia de supervisão interna.
@@ -46,7 +48,9 @@ A modelação atende a requisitos avançados da teoria relacional, incluindo:
 
 ## Artefatos do Projeto e Novidades
 
-A documentação técnica e os scripts estão estruturados cronologicamente de acordo com as seguintes fases de entrega:
+A documentação técnica e os scripts estão estruturados cronologicamente de acordo com as seguintes fases de entrega. Os documentos ficam em `docs/` (um subdiretório por etapa) e os scripts em `sql/`.
+
+### Etapa 1 — Modelagem e Implementação Inicial (`docs/Etapa 1/`)
 
 * **relatorio-etapa1:** Relatório único em PDF reunindo os artefatos A1 a A5.
 
@@ -66,7 +70,28 @@ A documentação técnica e os scripts estão estruturados cronologicamente de a
 * **Apresentação do Trabalho:** Documento em formato `.pdf` para apresentação do Banco de Dados em sala de aula.
 
 
-* **Scripts SQL de Implementação:**
+### Etapa 2 — Aplicação, Projeto Físico e Manutenção (`docs/Etapa 2/`)
+
+* **Relatório Final Consolidado** (`Relatório Final Consolidado-Locadora de Equipamentos.pdf`): Relatório que reúne as duas etapas: modelagem e implementação inicial, perfis de acesso, views de proteção de dados, triggers e auditoria, projeto físico, testes e organização do repositório.
+
+
+* **Relatório da Aplicação com Interface** (`relatorio_aplicacao_interface.pdf`): Mapeia cada requisito da avaliação ao ponto do código Java em que foi implementado (CRUD de 4 entidades, consultas com junção e agregação, tela baseada em view, transações ACID, tratamento de erros de banco, prevenção a SQL Injection com `PreparedStatement` e credenciais externalizadas). Inclui a descrição das telas e uma demonstração de teste de SQL Injection.
+
+
+* **Tipos de Dados e Melhorias Físicas** (`Tipos de Dados e Melhorias Físicas.pdf`): Análise dos tipos de dados adotados (`INT`, `VARCHAR`, `NUMERIC(10,2)`, `DATE`) e recomendações de melhoria física, como `DATETIME`/`TIMESTAMP` no histórico de status, uso de índices validados com `EXPLAIN` e revisão das chaves estrangeiras e regras de exclusão.
+
+
+* **Estimativa de Crescimento das Tabelas em Dois Anos** (`Estimativa de Crescimento das Tabelas em Dois Anos.pdf`): Identifica as tabelas de maior crescimento (`emprestimo`, `item_emprestimo`, `pagamento`, `parcela_pagamento` e `historico_status_equipamento`) e apresenta a fórmula de projeção para 24 meses. É uma metodologia de cálculo: o documento não traz medição real da média mensal.
+
+
+* **Plano de Backup, Retenção e Restauração** (`Plano_Backup_Retencao_Restauracao.pdf`): Proposta de rotina de backup (diário e antes de mudanças relevantes), política de retenção (7 diárias, 4 semanais e 3 mensais), procedimento de restauração em ambiente de teste e critérios de validação. Trata-se de um plano proposto, que não comprova por si só a execução dos backups e das restaurações.
+
+
+* **Roteiro de Apresentação** (`Roteiro_Apresentacao.pdf`): Roteiro curto de fala em seis tópicos (apresentação, modelagem, implementação, segurança e validação, projeto físico e manutenção, encerramento).
+
+
+### Scripts SQL de Implementação (`sql/`)
+
 * **01_ddl.sql (A6):** Script de criação da base de dados, tabelas, constrangimentos (UNIQUE, CHECK, FOREIGN KEY) e gatilhos (Triggers).
 
 
@@ -83,37 +108,24 @@ A documentação técnica e os scripts estão estruturados cronologicamente de a
 
 ## Estrutura de Arquivos
 
-Abaixo apresentamos a topologia do projeto e seus artefatos:
+Abaixo apresentamos os diretórios principais do repositório:
 
 ```text
- BD_LocadoraDeEquipamentos
-├──  README.md
-├──  Projeto_Final_Laboratorio_de_Banco_de_Dados_2026-2.pdf  # Documentação de modelagem e relatório do Banco de Dados
-├──  docs/                                                   # Documentação do trabalho                        
-├──  sql                                                     # Scripts do Banco de Dados
-│   ├──  01_ddl.sql                                          # Estrutura (Tabelas, FKs, Views e Triggers)
-│   ├──  02_carga.sql                                        # Inserção de dados de teste (DML)
-│   ├──  03_consultas.sql                                    # Consultas analíticas e operacionais (DQL)
-│   ├──  04_testes_transacionais.sql                         # Testes de Concorrência e Transações (TCL)
-│   └──  5_otimizacao_indices.sql                            # Otimização de Performance (Índices)
-└── locadora-construcao-civil                                # Aplicação Java
-    ├──  build.xml                                           # Script de build (Ant/NetBeans)
-    ├──  config.properties                                   # (Requerido) Arquivo de credenciais do BD
-    ├──  manifest.mf
-    └──  src
-        └──  br
-            └──  locadora
-                ├──  controller                              # Lógica de controle e regras de negócio
-                ├──  model
-                │   ├──  dto                                 # Objetos de Transferência de Dados para relatórios
-                │   ├──  entities                            # Classes de modelo mapeando as tabelas SQL
-                │   ├──  enums                               # Enumeradores (ex: StatusEmprestimo)
-                │   └──  exceptions                          # Exceções personalizadas (Domain e DataBase)
-                └──  view                                    # Telas da Interface Gráfica (Swing GUI Forms)
-                    ├──  TelaPrincipal.java                  # Menu Inicial
-                    ├──  TelaEmprestimo.java                 # Gestão de Carrinho/Novo Empréstimo
-                    ├──  TelaCliente.java                    # CRUD Clientes
-                    └──  ... (Outras telas operacionais)
+BD_LocadoraDeEquipamentos/
+├── README.md
+├── Projeto_Final_Laboratorio_de_Banco_de_Dados_2026-2 .pdf   # Enunciado do projeto final da disciplina
+├── docs/                                                     # Documentação do trabalho, organizada por etapa
+│   ├── Etapa 1/                                              # MER, dicionário de dados, modelo lógico, relatório e apresentação
+│   └── Etapa 2/                                              # Relatórios, projeto físico, crescimento das tabelas, backup e roteiro
+├── sql/                                                      # Scripts do Banco de Dados (MySQL 8+)
+│   ├── 01_ddl.sql                                            # Estrutura (Tabelas, FKs, Views e Triggers)
+│   ├── 02_carga.sql                                          # Inserção de dados de teste (DML)
+│   ├── 03_consultas.sql                                      # Consultas analíticas e operacionais (DQL)
+│   ├── 04_testes_transacionais.sql                           # Testes de Concorrência e Transações (TCL)
+│   └── 5_otimizacao_indices.sql                              # Otimização de Performance (Índices)
+└── locadora-construcao-civil/                                # Aplicação Java (Swing + JDBC)
+    ├── build.xml                                             # Script de build (Ant/NetBeans)
+    └── src/br/locadora/                                      # Código-fonte: controller, model e view
 ```
 
 # Aplicação Java
