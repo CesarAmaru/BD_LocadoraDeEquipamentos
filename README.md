@@ -168,7 +168,7 @@ A forma mais rápida de testar o sistema é através do executável compilado.
 
 #### 3.2 UTILIZANDO `.jar` (S.O É EM GERAL)
 *   3.2.1 Coloque o `.jar` em uma pasta de sua preferência
-*  3.2.2 Crie a pasta  `drivers`
+*  3.2.2 Crie a pasta  `drivers` e coloque o **Driver JDBC** dentro dela
 *  3.2.3 Na mesma pasta do arquivo `.jar` crie um arquivo `.bat` com as seguintes instruções:
 *  **(Windows)**
     ```bat
