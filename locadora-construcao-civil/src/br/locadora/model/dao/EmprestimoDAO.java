@@ -12,7 +12,6 @@ import br.locadora.model.entities.Funcionario;
 import br.locadora.model.entities.ItemEmprestimo;
 import br.locadora.model.enums.StatusEmprestimo;
 import br.locadora.model.exceptions.DataBaseException;
-import com.mysql.cj.jdbc.result.ResultSetImpl;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;

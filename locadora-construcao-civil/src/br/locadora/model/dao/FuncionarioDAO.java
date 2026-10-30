@@ -25,9 +25,9 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
         String sqlFuncionario = "INSERT INTO funcionario (id_pessoa, salario, cargo, id_supervisor) VALUES (?, ?, ?, ?)";
 
         try (Connection cn = DAO.abrirBanco()) {
-            cn.setAutoCommit(false); // Inicia transação
+            cn.setAutoCommit(false); 
 
-            // 1. Insere na tabela pai (pessoa)
+            
             try (PreparedStatement psPessoa = cn.prepareStatement(sqlPessoa, Statement.RETURN_GENERATED_KEYS)) {
                 psPessoa.setString(1, objeto.getNome());
                 psPessoa.setString(2, objeto.getDocCpfCnpj());
@@ -35,13 +35,11 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
                 psPessoa.setString(4, objeto.getTelefone());
                 psPessoa.executeUpdate();
 
-                // Recupera o ID gerado para a pessoa
                 try (ResultSet rs = psPessoa.getGeneratedKeys()) {
                     if (rs.next()) {
                         int idPessoaGerado = rs.getInt(1);
                         objeto.setIdPessoa(idPessoaGerado);
 
-                        // 2. Insere na tabela filha (funcionario)
                         try (PreparedStatement psFunc = cn.prepareStatement(sqlFuncionario)) {
                             psFunc.setInt(1, idPessoaGerado);
                             psFunc.setDouble(2, objeto.getSalario());
@@ -57,9 +55,9 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
                         }
                     }
                 }
-                cn.commit(); // Efetiva no banco
+                cn.commit(); 
             } catch (SQLException e) {
-                cn.rollback(); // Desfaz tudo em caso de erro
+                cn.rollback();
                 throw e;
             } finally {
                 cn.setAutoCommit(true);
@@ -120,7 +118,6 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
             try (PreparedStatement psPessoa = cn.prepareStatement(sqlPessoa);
                  PreparedStatement psFunc = cn.prepareStatement(sqlFuncionario)) {
                 
-                // Atualiza Pessoa
                 psPessoa.setString(1, v.getNome());
                 psPessoa.setString(2, v.getDocCpfCnpj());
                 psPessoa.setString(3, v.getEmail());
@@ -128,7 +125,6 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
                 psPessoa.setInt(5, v.getIdPessoa());
                 psPessoa.executeUpdate();
 
-                // Atualiza Funcionário
                 psFunc.setDouble(1, v.getSalario());
                 psFunc.setString(2, v.getCargo());
                 
@@ -199,7 +195,6 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
             supervisor.setIdPessoa(idSup);
             func.setSupervisor(supervisor);
         }
-        
         return func;
     }
 }
