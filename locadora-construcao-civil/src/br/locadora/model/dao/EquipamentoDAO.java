@@ -15,21 +15,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-/**
- *
- * @author Usuario
- */
+
 public class EquipamentoDAO implements InterfaceDAO<Equipamento> {
 
     @Override
     public void inserir(Equipamento objeto) {
         String sql = "INSERT INTO equipamento (id_modeloE, numero_serie, status) VALUES (?, ?, ?)";
-        try (Connection cn = DAO.abrirBanco(); PreparedStatement ps = cn.prepareStatement(sql)) {
+        try (Connection cn = DAO.abrirBanco();) {
+            cn.setAutoCommit(false);
+            try (PreparedStatement ps = cn.prepareStatement(sql)) {
+                ps.setInt(1, objeto.getModelo().getIdModelo());
+                ps.setString(2, objeto.getNumeroSerie());
+                ps.setString(3, objeto.getStatus());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                cn.rollback();
+                throw e;
+            } finally {
+                cn.setAutoCommit(true);
+            }
 
-            ps.setInt(1, objeto.getModelo().getIdModelo());
-            ps.setString(2, objeto.getNumeroSerie());
-            ps.setString(3, objeto.getStatus());
-            ps.executeUpdate();
         } catch (SQLException e) {
             throw new DataBaseException("Erro ao inserir o equipamento: " + e.getMessage(), e);
         }
@@ -49,7 +54,7 @@ public class EquipamentoDAO implements InterfaceDAO<Equipamento> {
                     mod.setIdModelo(rs.getInt("id_modeloE"));
                     mod.setNome(rs.getString("nome_modelo"));
                     mod.setValorDiariaPadrao(rs.getDouble("valor_diaria"));
-                    
+
                     Equipamento eq = new Equipamento();
                     eq.setIdEquipamento(rs.getInt("id_equipamento"));
                     eq.setModelo(mod);
@@ -67,8 +72,8 @@ public class EquipamentoDAO implements InterfaceDAO<Equipamento> {
     @Override
     public List<Equipamento> bucarTodos() {
         String sql = "SELECT e.*, m.nome AS nome_modelo, m.valor_diaria_padrao FROM equipamento e "
-                   + "INNER JOIN modelo_equipamento m ON e.id_modeloE = m.id_modeloE";
-        
+                + "INNER JOIN modelo_equipamento m ON e.id_modeloE = m.id_modeloE";
+
         List<Equipamento> lista = new ArrayList<>();
 
         try (Connection cn = DAO.abrirBanco(); PreparedStatement ps = cn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -99,7 +104,7 @@ public class EquipamentoDAO implements InterfaceDAO<Equipamento> {
             ps.setInt(1, v.getIdEquipamento());
             ps.executeUpdate();
         } catch (SQLException e) {
-            if("23000".equals(e.getSQLState())){
+            if ("23000".equals(e.getSQLState())) {
                 throw new DataBaseException("Não é possível excluir esse registro pois ele está sendo utilizado em outro lugar", e);
             }
             throw new DataBaseException("Erro ao deletar o equipamento: " + e.getMessage(), e);
